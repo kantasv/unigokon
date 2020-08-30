@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>認証中</title>
+  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase-auth.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+
+  <script>// Firebaseの初期化
+var config = {
+  apiKey: "AIzaSyBd7cztCfjFy-SGkliZBcyjVmTY6kWd6lo",
+  authDomain: "unigokon.firebaseapp.com",
+};
+firebase.initializeApp(config);
+// google prov. instance
+var provider = new firebase.auth.GoogleAuthProvider();
+firebase.auth().onAuthStateChanged(function (user) {
+  if (firebase.auth().currentUser) {
+    //groupprofile.htmlにredirect
+    window.location.href = 'initUserProfile.html'
+  } else {
+    // language setup
+    firebase.auth().languageCode = 'ja';
+    // redirect login
+    firebase.auth().signInWithRedirect(provider);
+    //error handling
+    firebase.auth().getRedirectResult().then(function (result) {
+      if (result.credential) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // ...
+      }
+      // The signed-in user info.
+      var user = result.user;
+    }).catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+  }
+});
+
+
+
+/*
+        
+    //----------------------------------------------
+    // Firebase UIの設定
+    //----------------------------------------------
+    var uiConfig = {
+        // ログイン完了時のリダイレクト先
+        signInSuccessUrl: 'userinfo.html',
+
+        // 利用する認証機能
+        signInOptions: [
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        ],
+
+        // 利用規約のURL(任意で設定)
+        tosUrl: 'http://example.com/kiyaku/',
+        // プライバシーポリシーのURL(任意で設定)
+        privacyPolicyUrl: 'https://miku3.net/privacy.html'
+      };
+
+    firebase.auth().languageCode = 'ja';
+        
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      ui.start('#firebaseui-auth-container', uiConfig);
+        */</script>
+</head>
+<body>
+  <div id="firebaseui-auth-container"></div>
+  <div id="loader"></div>
+  <!-- MDL Progress Bar with Indeterminate Progress -->
+<div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+</body>
+</html>

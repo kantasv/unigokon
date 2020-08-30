@@ -1,0 +1,156 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>lab</title>
+    <meta name="description" content="lab">
+    <meta name="author" content="SitePoint">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+    <script src="/__/firebase/6.6.1/firebase-app.js"></script>
+    <script src="/__/firebase/6.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+  </head>
+  <body>
+    <h1>グループメッセージ</h1>
+    <hr>
+    <input id='textbox'>
+    <span id='edit_attribute'>[変更]</span><br>
+
+    <hr>
+
+    <script>
+var currentUserObject;
+/*cu
+ **********UNIGOKON SETTING FROM HERE*********
+ */
+//document.getElementByIDの省略処理
+function addOnclickEvent(cssid, onclickFunction) {
+  document.getElementById(cssid).onclick = onclickFunction
+}
+
+//modifyHTML) 任意idに対してHTML書き換えの関数を準備
+function modifyHTML(cssid, content_modific) {
+  document.getElementById(cssid).innerHTML = content_modific
+}
+//note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
+var db = firebase.firestore();
+/*デバッグ時に変更が適用されたかどうかを以下でチェック*/
+//後々実名変更回数制限を設ける
+//今は実装しない
+//グループプロファイルのplaceholderつくる
+//初回ログイン時にphotoURLをplaceholderのURLにする
+var user = firebase.auth().currentUser;
+/*
+ **********UNIGOKON SETTING END HERE**********
+ */
+function saveUserObjectIntoVariable(users_path) {
+  db.collection("users").doc(users_path).get().then(function (doc) {
+    console.log('usersObject saved into a variable', doc.data())
+    currentUserObject = doc.data()
+  }).then(function () {
+    //todo create a group object
+    saveGroupObjectIntoVariable(0)
+  })
+}
+//you need to specify which group you wanna save object into a variable
+//ここでエラーが時々出るのは何故か？これは全ての共通部分で確認すべき部分
+//SETでの更新がうまくできていない
+//下の部分がundefned になる（実行のタイミングがだめ）
+//グループ作成ごは行けるようだ
+function saveGroupObjectIntoVariable(currentGroupSelected) {
+  db.collection("groups").doc(currentUserObject.groupID[currentGroupSelected]).get().then(function (doc) {
+    console.log('groupObject saved into a variable', doc.data())
+    currentGroupObject = doc.data()
+  })
+}
+firebase.auth().onAuthStateChanged(authStateObserver)
+
+
+function authStateObserver(user) {
+  if (user) {
+    console.log('login status: in')
+    /*
+    ************************************************
+    以下firebase.auth().currentUserオブジェクト関連の処理はこのレベルに配置せよ
+    Firebase公式ドキュメントによるとonAuthStateChangedオブザーバーによる処理が推奨されている
+    ************************************************
+    */
+    //firestore read and write tests here
+    //CREATING A GROUP
+    //TODO:adding multiple groups
+
+      //currentUserObjectの更新
+      saveUserObjectIntoVariable(user.uid)
+      /*
+            //get data with specified groupID and save them into js dictionary
+          function getGroupData{}
+            //modify a group with specified group id
+          }
+          function modifyGroup(groupID,groupData){  
+
+          }
+      */
+    
+    //showGroupsはユーザが作成したグループの一覧の配列を返す
+    //showGroups().groupName のように値を取り出したい
+    //ここはユーザのobjectのみ
+    //readUserOb//*******************ject(user.uid).groupID[1]
+    //users , groups object作ればいいのか
+    //firestore/users/[uid]の配列を読み取りのみで変数にほぞん
+    //USER OBJECT SETUP (read only)
+    //currentUserObjectはグローバル変数にしている
+
+    //*********この実行タイミングがうまくできていない
+    //*********このsetupの配置を考え直す
+    /*
+    //GROUP OBJECT SETUP (read only)
+    var currentGroupObject;
+    savaGroupObjectIntoVariable()
+    function savaGroupObjectIntoVariable(groupID) {
+      var groupsObject_firestore_users;
+      db.collection("groups").doc(currentUserObject.groupID).get().then(function (doc) {
+        console.log('groupsObject saved into a variable',doc.data())
+        currentGroupObject = doc.data()
+      })
+    }
+    */
+
+
+
+    //saveMessage setup
+    function updateAttribute(name) {
+      return firebase.firestore().collection('users').doc(user.uid).set({
+        name:name
+
+      }).then(function(){console.log('updated')}).catch(function (error) {
+        console.error('Error writing new message to database', error)
+      })
+    }
+    //getting info from input tag
+    //Saving a new message test exceting
+    addOnclickEvent('edit_attribute', function () {
+      updateAttribute('check')
+      document.getElementById('textbox').value=''
+    })
+    //*******
+
+
+
+
+  } else {
+    console.log('login status: out')
+    alert('ログインしていません')
+    window.location.href = 'index.html'
+  }
+}
+
+
+//todo html書き換え
+</script>　
+<script>
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,165 @@
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<style type='text/css'>
+
+body{
+    background: #f8f4e6;
+}
+.top_function_bar{
+    background: #fff;
+    display: flex;
+    padding: 0px 10px;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+}
+.person_placeholder img{
+    height: 100px;
+    width: auto;
+    display: flex;
+}
+/* トップのナビ説明エリア*/
+.topNav {
+  font-size: 14px;
+  padding: 1em;
+}
+/* グループプロフィールとチャット終了ボタン*/
+.topBar_inner {
+  padding: .5em 1em;
+  border: 1px solid;
+  margin: .5em 1em;
+  cursor: pointer;
+}
+/* メッセージを表示するエリア*/
+.message_display{
+    line-height: 1.6;
+    margin: 0 auto;
+    padding: 100px 1em;
+    width: auto;
+}
+/* 受信メッセージを左寄せ*/
+.receive_message {
+    display: block;
+    width: 80%; /* メッセージの枠サイズ */
+    padding: 0.3em;
+    border: 1px solid #333;
+    border-radius: 3px;
+    margin: 0.3em auto 0.3em 10%; /* 吹き出し左側に顔写真用の余白を作る */
+    background-color: #eeffaa;  /* 背景色 */
+}
+/* 送信メッセージを右寄せ*/
+.sent_message {
+    display: block;
+    max-width: 85%; /* メッセージの枠サイズ */
+    padding: 0.3em;
+    border: 1px solid #333;
+    border-radius: 3px;
+    margin: 0.3em 0 0.3em auto; /* 右寄せ */
+    background-color: #eee;  /* 背景色 */
+}
+.input_textbox{
+  width: 80%;
+  height:100%;
+  padding: 0px 8px;
+  border-radius: 3px;
+  border: 1px solid #aaa;
+  font-size: 1em;
+}
+.send_button{
+  width: 20%;
+  height:100%;
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid #aaa;
+  background-color: #ddd;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+
+#bottom_message_bar{
+    background:#fff;
+    display: flex;
+    padding: 8px;
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    bottom: 0;
+}
+</style>
+
+
+<body>
+
+
+
+
+  <header class="top_function_bar">
+
+    <h1 class="person_placeholder">
+      <img src="person_placeholder.png">
+    </h1>
+
+
+    <nav>
+      <div class="topNav">
+      <!-- h1タグはページに一つしか使ってはいけないからここはh2にすべき -->
+        <h1>花子（「同女タピオカ同盟」）との幹事チャット</h1>
+        <ul class="topBar flexbox">
+          <li class="topBar_inner">グループプロフィールをみる</li>
+          <li class="topBar_inner">チャット終了</li>
+        </ul>
+      </div>
+    </nav>
+
+  </header>
+
+  <div class="message_display">
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="receive_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">予定通りとりのすけ集合！お酒もっていきます！</p>
+    <p class="sent_message">ココが最も下の部分</p>
+
+    <span id='message_box' align='right'></span>
+  </div>
+
+    <a name='bottom'></a>
+
+    <span id='bottom_message_bar'>
+      <input class='input_textbox' id='input_textbox_id'>
+      <button class='send_button' id='send'>送信</button>
+    </span>
+
+    <script>
+    //ここにログインのソースコードとこの前作成したリアルタイム読み書きのソースコードを入れればチャットは完成
+    //chatの本当の機能はchat.htmlの方に実装しています
+    //このHTMLはデザイン用です
+    //一番下に持ってくるためだけに上で<a name='bottom'></a>を作っています
+    //URLに#bottomを指定して下にある最新のメッセージにスクロールさせます
+
+    document.getElementById('send').onclick=()=>{
+      var temp_text=document.getElementById('input_textbox_id')
+      var message=temp_text.value
+      temp_text.value=''
+      console.log(message)
+      document.getElementById('message_box').innerHTML+=`<br>${message}`
+    }
+  </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="script.js"></script>
+</body>

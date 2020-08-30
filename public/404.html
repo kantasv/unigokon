@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <title>指定されたページが存在しません</title>
+
+    <style media="screen">
+      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px 16px; border-radius: 3px; }
+      #message h3 { color: #888; font-weight: normal; font-size: 16px; margin: 16px 0 12px; }
+      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      @media (max-width: 600px) {
+        body, #message { margin-top: 0; background: white; box-shadow: none; }
+        body { border-top: 16px solid #ffa100; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message">
+      <h2>UniGokon Error: 404</h2>
+      <h1>指定されたページが見つかりません</h1>
+      <p>URLを確認してください</p>
+      <h3>考えられる理由</h3>
+      <p>・操作に関わるユーザーのアカウントが何らかの理由により消去された</p>
+      <p>・機能を提供するサーバーに一時的な不具合が生じている</p>
+      <p>・一時的または定期的なメンテナンスの実施中</p>
+      <p>・URLを手動で書き換えた際の打ち間違い</p>
+      <p>開発チームより：致命的なバグが発生していると思われると思われる場合は、以下のボタンより開発者にバグの内容を送信していただけると幸いです。注意：本サービスへのログインが必要です。</p>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick='send_error_report()'>
+  開発者に不具合レポートを送信する
+</button>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick='back_to_dashboard()'>
+  ダッシュボードに戻る
+</button>
+    </div>
+
+<script>
+function send_error_report(){
+  window.location.href='chat.html?chatroom=WHqZV6a0fZeNLORwvG7eHC8iG9A2_WHqZV6a0fZeNLORwvG7eHC8iG9A2'
+}
+
+function back_to_dashboard(){
+  window.location.href='dashboard.html'
+}
+</script>
+  </body>
+</html>

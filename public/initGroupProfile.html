@@ -1,0 +1,156 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>グループデータ状況確認中</title>
+    <meta name="description" content="initUserProfile">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="author" content="SitePoint">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+    <script src="/__/firebase/6.6.1/firebase-app.js"></script>
+    <script src="/__/firebase/6.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  </head>
+  <body>
+
+  <!-- MDL Progress Bar with Indeterminate Progress -->
+<div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+
+    <script>
+
+
+
+
+
+/*12/28 todo
+
+done: check uid/groupID(field) exists:
+
+*/
+
+function getUserUid(){
+  return firebase.auth().currentUser.uid;
+}
+
+
+
+//note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
+var db = firebase.firestore();
+/*デバッグ時に変更が適用されたかどうかを以下でチェック*/
+//後々実名変更回数制限を設ける
+//今は実装しない
+//グループプロファイルのplaceholderつくる
+//初回ログイン時にphotoURLをplaceholderのURLにする
+/*
+ **********UNIGOKON SETTING END HERE**********
+ */
+
+
+firebase.auth().onAuthStateChanged(authStateObserver)
+
+
+function authStateObserver(user) {
+  if (user) {
+    console.log('login status: in')
+
+    checkGroupInitState()
+
+
+
+
+
+  } else {
+    console.log('login status: out')
+    alert('ログインしていません')
+    window.location.href = 'index.html'
+  }
+}
+
+//createGroup()を作る
+//temporal //notyet //incomplete
+      function createGroup(groupData,moveToEdit) {
+        var generatedGroupID
+        //todo 取得をdoc()でやってみる
+        db.collection('groups').add(groupData).then(function (docRef) {
+          console.log("groupData successfully written into 'groups/' (groupid generated randomly)");
+          console.log("generated groupid in 'groups':" + docRef.id)
+          generatedGroupID=docRef.id
+          //user.idに１つ割り当てられるcollectionにアクセスしdocRefを記録する処理
+          //user info update here
+          //users/[uid]/groupIDが存在している場合を前提としている
+          // groupIDをusers/DKDJSkdfj groupIDにほぞん
+          db.collection('users').doc(getUserUid()).set({
+            groupID: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+          },{merge:true}).then(function () {
+            console.log('group id has been stored into users/[uid]/groupID')
+            if(moveToEdit==true){
+              window.location.href=`editGroupProfile.html?groupID=${generatedGroupID}&status=initial_setting`
+            }
+          });
+        })
+      }
+      //Actually creating a group here:
+
+/*
+function initGroup(groupID){
+  testみたいな内容をコピーして、groupがなければここでグループ構造の初期化してしまうか
+}
+*/
+//notyet //temporal 
+
+
+
+
+
+function checkGroupInitState() { //#une
+  //groupidが存在するかどうかを判断基準にする
+  db.collection('users').doc(getUserUid()).get().then(function (doc) {
+    if (doc.exists) {
+      //at least one group exists
+      if(doc.data()["groupID"]){
+        console.log('group already exists')
+        console.log('supposed to move to dashboard')
+        window.location.href='dashboard.html'
+      }else{
+        //move to editGroupProfile to create the first group
+        console.log('no group') 
+        firebase.firestore().collection('users').doc(getUserUid()).get().then((doc)=>{
+          createGroup({
+            groupName: '',
+            avatarImage: 'person_placeholder.png',
+            profiles: [{
+              name: doc.data()['nickname'],
+              description: 'このグループの幹事ユーザー'
+            }],
+            groupDescription: '',
+            accountID: getUserUid()
+          },true) 
+        //2nd argument here is true, which means the page jump to editGroupProfile.html?groupID=[generatedGroupID]
+          
+        })
+      }
+   //window.location.href = 'initGroupProfile.html'
+    } else {
+      console.log("users/[uid] document doesn't exist. Unexpected error.");
+    }
+  }).catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+    }
+
+
+
+
+//todo html書き換え
+</script>　
+<script>
+
+</script>
+  </body>
+</html>

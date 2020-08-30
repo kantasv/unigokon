@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>グループプロフィール</title>
+    <meta name="description" content="The HTML5 Herald">
+    <meta name="author" content="SitePoint">
+    <link rel="stylesheet" href="unigokon.css?v=1.0">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  </head>
+  <header>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="/__/firebase/6.6.1/firebase-app.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#reserved-urls -->
+  <script src="/__/firebase/6.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js"></script>
+
+
+  <!-- Initialize Firebase -->
+  <script src="/__/firebase/init.js"></script>
+  
+
+  <h1 id="groupNameTop">-</h1>
+  <h1>のグループプロフィール</h1>
+  <span id="b_modific">[変更を適用]</span>
+  <br>
+  <form>*のついた項目は一般に公開されます 
+    <br>
+    <center>プロフィール画像
+      <br>
+      <img src='images/placeholder.jpg' id="placeholder" height=200 width=200>
+      <br>
+    </center>
+    <br>グループネーム*：
+    <input type="text" id="i_groupname">
+    <br>名前：
+    <input type="text" id="i_fullname">
+    <br>メールアドレス（変更不可能）：
+    <span id='p_mail'>-</span>
+    <br>
+    <span id='buttonToChat'>[グループチャットのデモ]</span>
+    <span >[マイグループ（通知の数）]</span>
+    <span id="b_logout">[ログアウト]</span>
+    <span >[ヘルプ]</span>
+    <span >[合コンをはじめる]</span>
+    <span >[友達を招待]</span>
+    <span id='b_firestore'>firestore書き込みテスト</span>
+    <span id="b_delete">[アカウントを削除]</span>
+  </form>
+  <script>
+/*
+**********UNIGOKON SETTING FROM HERE*********
+*/
+//document.getElementByIDの省略処理
+function addOnclickEvent(cssid, onclickFunction){
+  document.getElementById(cssid).onclick = onclickFunction
+}
+//modifyHTML) 任意idに対してHTML書き換えの関数を準備
+function modifyHTML(cssid, content_modific) {
+  document.getElementById(cssid).innerHTML = content_modific
+}
+//note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
+var db = firebase.firestore();
+/*デバッグ時に変更が適用されたかどうかを以下でチェック*/
+//後々実名変更回数制限を設ける
+//今は実装しない
+//グループプロファイルのplaceholderつくる
+//初回ログイン時にphotoURLをplaceholderのURLにする
+var user = firebase.auth().currentUser;
+/*
+**********UNIGOKON SETTING END HERE**********
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    console.log('login status: in')
+    /*
+    ************************************************
+    以下firebase.auth().currentUserオブジェクト関連の処理はこのレベルに配置せよ
+    Firebase公式ドキュメントによるとonAuthStateChangedオブザーバーによる処理が推奨されている
+    ************************************************
+    */
+    //groupname取得　書き換え とりま書き換え実行
+    function profile_modific() {
+      user.updateProfile({
+        displayName: document.getElementById("i_groupname").value,
+      }).then(function () {
+        // Update successful.
+        console.log("success userprofile update")
+        window.location.href = "groupprofile.html"
+      }).catch(function (error) {
+        // An error happened.
+        console.log("failed userprofile update")
+      });
+    }
+    //変更適用ボタンを作る必要あり　全体の変更適用ボタンをつくるmo
+    //現在の変更適用ボタンはgroupameのみになっている
+    //displayNameは扱いに注意が必要
+    //書き換え後のリロードの記述は上の関数定義の中
+
+    addOnclickEvent('b_modific',function(){profile_modific()})
+
+      //変更適用後は念のためリロード処理をprogile_modificで指定していることに注意
+
+
+
+    //*****PROBLEM HERE
+    //d_deleteボタンクリックでユーザ消去を実行する設定
+    //error: post 400 なぜ？
+    addOnclickEvent('b_delete',function(){
+      user.delete().then(function () {
+      console.log("success delete")
+        // User deleted.
+      }).catch(function (error) {
+        // An error happened.
+        console.log("delete failed")
+      });
+    })
+
+
+    //*****
+
+    //inputの初期値書き換え
+    document.getElementById("i_groupname").value = user.displayName;
+    document.getElementById("i_fullname").value = user.displayName;
+    modifyHTML("p_mail", user.email)
+    //プロフィール画像の更新
+    //photoURLがnullの場合のplaceholderの分岐もいつかする
+    document.getElementById("placeholder").src = user.photoURL
+    //トップのグループネームh1タグの更新
+    modifyHTML("groupNameTop", "「" + user.displayName + "」")
+    //logoutの実装
+    //実際にログアウトできているのか今後詳しく確認
+    //おそらく　authStateChangedがログアウトする前にトリガーされている？
+    addOnclickEvent('b_logout',function(){
+      firebase.auth().signOut().then(() => {
+        console.log("ログアウトしました");
+      }).catch((error) => {
+        console.log(`ログアウト時にエラーが発生しました (${error})`);
+      });
+    })
+
+    //firestore read and write tests here√
+    addOnclickEvent('b_firestore',function () {
+      var testRef = db.collection("users");
+      //users docにメアドと名前を追加
+      //現段階では書き込みテストができればそれでいいい
+      //最終的にはserverTimeStampで最終更新のタイミングも保存する
+
+      //creating a group and writing the generated group id into users/groupName
+      function createAGroup(groupData) {
+        //
+        db.collection('groups').add(groupData).then(function (docRef) {
+          console.log("Document successfully written!");
+          console.log(docRef.id)
+          //user.idに１つ割り当てられるcollectionにアクセスしdocRefを記録する処理
+          //user info add
+          testRef.doc(user.uid).set({
+            name: "kanta",
+            mail: user.email,
+            groupName: [docRef.id]
+          }).then(function () {
+            console.log("Document successfully written!");
+          }).catch(function (error) {
+            console.error("Error writing document: ", error);
+          })
+        }).catch(function (error) {
+          console.error("Error writing document: ", error);
+        })
+        //
+      }
+      createAGroup({
+        avatarImage: 'URL',
+        numberOfPeople: 3,
+        profiles: [{
+          name: 'takashi',
+          age: 5,
+          locationInPicture: 'jijki'
+        }, {
+          name: 'takeda',
+          age: 10,
+          locationInPicture: '下の方'
+        }],
+        groupProfile: "I'm looking forward to seeing you guys!",
+        accountID: user.uid
+      })
+      /*
+            //get data with specified groupID and save them into js dictionary
+          function getGroupData{}
+            //modify a group with specified group id
+          }
+          function modifyGroup(groupID,groupData){  
+
+          }
+      */
+    })
+
+
+
+
+
+    //modifyHTML("p_fullname",user.displayName)
+    //modidyHTML("p_fullname",user.displayName)
+    /*user displayNameModification*/
+  } else {
+    /*
+
+    *********ログインしていないとき飛ばすページをここで指定
+    デフォルトではindex.htmlを指定
+    将来的にこの部分はauthcheck.jsのように名前を決めて各ページで読み込ませ実行する必要あり
+
+    */
+    console.log('login status: out')
+    window.location.href = 'index.html'
+  }
+});
+
+function moveTo(cssid, wheretogo) {
+  addOnclickEvent(cssid, function(){
+    window.location.href = wheretogo
+  })
+};
+moveTo('buttonToChat', 'chat/index.html')
+/*correntuser object
+  uid, emailVerified, photoURL, email, displayName
+        
+*/
+//現在は１ユーザにつき１グループしか追加できない
+//user groupNameの配列に追加したり削除したりする操作は後々実装する必要あり
+//cloud firestore turorial用のボタン作成
+//adding users to firestore 
+//getting userid from firebase authentification
+
+      </script>
+  </body>
+</html>
