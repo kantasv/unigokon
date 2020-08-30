@@ -47,13 +47,13 @@
         </div>
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
           <!--テキストボックス-->
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> 氏名（β版なので偽名で構いません）<input
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> 氏名<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、安全のため氏名は入力せず、代わりに好きなポケモンのキャラクタを入力するようにお願いします</b><input
               class="mdl-textfield__input" type="text" id="input_0"> <label class="mdl-textfield__label"
               for="input_0"></label> </div><br>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> ニックネーム<input
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> ニックネーム<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、個人特定が可能なニックネームはお控えください</b><input
               class="mdl-textfield__input" type="text" id="input_1"> <label class="mdl-textfield__label"
               for="input_2"></label> </div><br>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> メールアドレス<input
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> メールアドレス<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、実際は安全のためexample@example.comに強制的にセットされます</b><input
               class="mdl-textfield__input" type="text" id="input_2"> <label class="mdl-textfield__label"
               for="input_3"></label> </div><br>
 
@@ -251,12 +251,14 @@
         loadstart()
 
         //firebase-
+        //originally,  document.getElementById("input_2").value
+        //but for security reasons, it sets mail field to 'example@example.com'
+
         firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
 
           name: document.getElementById("input_0").value,
           nickname: document.getElementById("input_1").value,
-          mail: document.getElementById("input_2").value
-
+          mail:'example@example.com'
         }, { merge: true }).then(() => {
           toastbar("幹事プロフィールが正常に保存されました")
           loadfinish();
