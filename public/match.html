@@ -281,8 +281,13 @@ function draw_group_callback(){
 
 
 
-    //2020/02/13 potential error: if groupid doesnt exist in user firestore storage, then error can happen here.
-    groupID=doc.data()['groupID'][0]
+    //SOLVED:2020/02/13 potential error: if groupid doesnt exist in user firestore storage, then error can happen here.
+    //NOW when this happens, the page will reload itself
+    if(doc.data()['groupID']){
+      groupID=doc.data()['groupID'][0]
+    }else{
+      window.location.reload()
+    }
     //document.getElementById('editGroup_0').onclick=()=>{window.location.href=`editGroupProfile.html?groupID=${groupID}`}
 
     console.log(`groupID[0]=${groupID}`)
