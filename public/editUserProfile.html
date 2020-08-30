@@ -57,7 +57,7 @@
               class="mdl-textfield__input" type="text" id="input_2"> <label class="mdl-textfield__label"
               for="input_3"></label> </div><br>
 
-          profile pic--><br><img src="person_placeholder.png" id="placeholder" height='300px' width='300px'><br>
+          <br><img src="person_placeholder.png" id="placeholder" height='300px' width='300px'><br>
           <!--ボタン-->
           <div class="mdl-card__actions">
             <form id="image-form" action="#"> <input id="mediaCapture" type="file" accept="image/*"> <button
@@ -72,14 +72,6 @@
           </div>
           <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
             <div class="mdl-snackbar__text"></div> <button class="mdl-snackbar__action" type="button"></button>
-            <script type="text/javascript">
-              var snackbarContainer = document.querySelector('#demo-toast-example');
-              function toastbar(text) {
-                snackbarContainer.MaterialSnackbar.showSnackbar({
-                  message: text
-                })
-              }
-            </script>
           </div>
         </div>
     </main>
@@ -92,8 +84,26 @@
     #mediaCapture {
       display: none;
     }
+
+    @media screen and (min-width:480px) {
+
+      /*pc or tablet*/
+      .mdl-layout__content {
+        width: 360px;
+        height: 500px;
+        margin: 0 auto;
+      }
+    }
   </style>
   <script type="text/javascript">
+    //snackbar
+    var snackbarContainer = document.querySelector('#demo-toast-example');
+    function toastbar(text) {
+      snackbarContainer.MaterialSnackbar.showSnackbar({
+        message: text
+      })
+    }
+
     //*****URL**PARAMETERS*******//
     var urlParameter = new Object;
     var pair = location.search.substring(1).split('&');
