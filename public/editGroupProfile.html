@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
@@ -15,6 +16,7 @@
   <script src="/__/firebase/6.6.1/firebase-storage.js"></script>
   <script src="/__/firebase/init.js"></script>
 </head>
+
 <body>
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
@@ -32,715 +34,712 @@
       <!--コンテンツ-->
       <div class="page-content">
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-          <h5 id='initial_setting'></h5>グループにはあなたの友達を複数人登録できます。あなたが作ったグループが、他のグループに表示され、グループ単位で合コン相手を募ることができます。 <b>*氏名とメールアドレスは公開されません</b> </div>
+          <h5 id='initial_setting'></h5>グループにはあなたの友達を複数人登録できます。あなたが作ったグループが、他のグループに表示され、グループ単位で合コン相手を募ることができます。
+          <b>*氏名とメールアドレスは公開されません</b>
+        </div>
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
           <!--テキストボックス-->
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">グループネーム<input class="mdl-textfield__input" type="text" id="input_0"> <label class="mdl-textfield__label" for="input_0"></label> </div><br>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">グループの特徴（例：スポーツ好き）<input class="mdl-textfield__input" type="text" id="input_1"> <label class="mdl-textfield__label" for="input_2"></label> </div><br>
-          <!--
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">拠点（例：心斎橋）<input class="mdl-textfield__input" type="text" id="input_2"> <label class="mdl-textfield__label" for="input_3"></label> </div>
-          --><br>
-          <!--ラジオボタン-->
-          <!--
-          <div> グループの男女構成<br><label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-                            <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
-                            <span class="mdl-radio__label">男性メイン</span>
-                        </label> <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-                            <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
-                            <span class="mdl-radio__label">女性メイン</span>
-                        </label> <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
-                            <input type="radio" id="option-3" class="mdl-radio__button" name="options" value="3">
-                            <span class="mdl-radio__label">どちらでもない</span>
-                            
-                        </label> </div><br>
-
-          -->
-          <!-- Floating Multiline Textfield -->
-          <!--
-        <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid"> 
-
-
-          
-          <form action="#">
-            <div class="mdl-textfield mdl-js-textfield">グループの魅力（自由記述）
-              <textarea class="mdl-textfield__input" type="text" rows= "3" id="sample5" ></textarea>
-              <label class="mdl-textfield__label" for="sample5"></label>
-            </div>
-          </form> 
-
-
-
-          </div>     
-        -->
-          <!-- 
-profile pic--><br>
-          <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid"> <img src="person_placeholder.png" id="placeholder" height='300px' width='300px'><br> </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">グループネーム<input
+              class="mdl-textfield__input" type="text" id="input_0"> <label class="mdl-textfield__label"
+              for="input_0"></label> </div><br>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">グループの特徴（例：スポーツ好き）<input
+              class="mdl-textfield__input" type="text" id="input_1"> <label class="mdl-textfield__label"
+              for="input_2"></label> </div><br>
+          <br><br>
+          <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid"> <img
+              src="person_placeholder.png" id="placeholder" height='300px' width='300px'><br> </div>
           <!--ボタン-->
           <div class="mdl-card__actions">
-            <form id="image-form" action="#"> <input id="mediaCapture" type="file" accept="image/*"> <button id="submitImage" title="Add an image" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
-              <i class="material-icons">image</i>画像をアップロード
-            </button> </form><br> <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id='saveChanges' onclick='saveProfile()'><i class="material-icons">save</i>変更を保存</button>&ensp;<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id='complete_button' onclick="window.location.href='initGroupProfile.html'">編集を終了</button> </div>
+            <form id="image-form" action="#"> <input id="mediaCapture" type="file" accept="image/*"> <button
+                id="submitImage" title="Add an image"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
+                <i class="material-icons">image</i>画像をアップロード
+              </button> </form><br> <button
+              class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+              id='saveChanges' onclick='saveProfile()'><i class="material-icons">save</i>変更を保存</button>&ensp;<button
+              class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+              id='complete_button' onclick="window.location.href='initGroupProfile.html'">編集を終了</button>
+          </div>
           <!-- Three Line List with secondary info and action -->
           <style>
+            @media screen and (min-width:480px) {
+
+              /*pc or tablet*/
+              .mdl-layout__content {
+                width: 360px;
+                height: 500px;
+                margin: 0 auto;
+              }
+            }
+
             .demo-list-three {
               width: 650px;
             }
           </style>
-          <!-- 一人分の表示欄と入力欄を作る。入力欄は非表示だが、編集ボタンクリックで表示させる--><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick='addPersonToList()'><i class="material-icons">add_circle</i>メンバーを追加</button>&ensp;<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick='selectPersonToRemoveFromFirestore()'><i class="material-icons">remove_circle</i>メンバーを削除</button>
+          <!-- 一人分の表示欄と入力欄を作る。入力欄は非表示だが、編集ボタンクリックで表示させる--><button
+            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+            onclick='addPersonToList()'><i class="material-icons">add_circle</i>メンバーを追加</button>&ensp;<button
+            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+            onclick='selectPersonToRemoveFromFirestore()'><i class="material-icons">remove_circle</i>メンバーを削除</button>
           <div id='person'></div>
           <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
             <div class="mdl-snackbar__text"></div> <button class="mdl-snackbar__action" type="button"></button>
           </div>
-            <script type="text/javascript">
-              //*****URL**PARAMETERS*******//
-              var urlParameter = new Object;
-              var pair=location.search.substring(1).split('&');
-              for(var i=0;pair[i];i++) {
-                  var kv = pair[i].split('=');
-                  urlParameter[kv[0]]=kv[1];
-              }
-              var groupID_of_currentUser
-              
-              //disable navigation button if an user is at initial setting
-              //?status=initial_setting
+        </div>
 
-              if(urlParameter.status=='initial_setting'){
-                //dont forget include & if you have multiple parameters
-                //非同期処理関連　苦肉の策
-                setTimeout(()=>{
-                  var button_elm=document.querySelector("body > div > div > header > div.mdl-layout__drawer-button")
-                  button_elm.parentNode.removeChild(button_elm)
-                  document.getElementById('initial_setting').innerText=`${firebase.auth().currentUser.displayName}さん、はじめまして！次はグループを作成しましょう！`
-                },1000)
-              
-              
-              }
-              
-              
-              
-              //***********************
-              var db=firebase.firestore()
-              
-              var snackbarContainer = document.querySelector('#demo-toast-example');
-              function toastbar(text){
-                  snackbarContainer.MaterialSnackbar.showSnackbar({
-                      message:text
-                  })
-              }
-              
-              //draw lists of people (it doesnt create forms for miodifying each attribute) //afternoon
-              function drawListOfOnePerson(personIndex,name,description){
-                template_person='<ul class="demo-list-three mdl-list">'+
-                    '<li class="mdl-list__item mdl-list__item--three-line">'+
-                      '<span class="mdl-list__item-primary-content">'+
-                        '<i class="material-icons mdl-list__item-avatar">person</i>'+
-                        '<span contenteditable="true" id="editArea_name_'+personIndex+'">'+name+'</span>'+
-                        '<span class="mdl-list__item-text-body" contenteditable="true" id="editArea_description_'+personIndex+'">'+description+
-                        '</span>'+
-                      '</span>'+
-                    '</li>'+
-                    '<span id="editArea_'+personIndex+'">'+
-                    '</span>'+'<a href="javascript:drawFormOfOnePerson('+personIndex+
-                        ')">'
-              //contenteditable での改行処理は後回しにする
-                    //上でmdlのデザインが適用されてない。これはまた今度解消
-                document.getElementById('person').innerHTML+=template_person 
-                //ボタンにイベントを追加
-              }
-              
-              
-              //afternoon
-              function getNameTextFromContenteditable(personIndex){
-                return document.getElementById(`editArea_name_${personIndex}`).innerText
-              }
-              
-              function getDescriptionFromContenteditable(personIndex){
-                return document.getElementById(`editArea_description_${personIndex}`).innerText
-              }
-              
-              
-              
-              //returns true or false //check
-              function checkFormContenteditable(){ //length //for
-                for(i=0;i<length_of_profiles;i++){
-              
-                  //namespaceok //edit
-                  if(!getNameTextFromContenteditable(i)){
-                    toastbar('入力欄が空白です')
-                    //fill space with default templates
-                    for(var j=0;j<length_of_profiles;j++){
-                      if(!getNameTextFromContenteditable(j)){
-                        document.getElementById('editArea_name_'+j).innerText="新しいメンバー（タップして編集）"
-                      }
-                    }
+
+
+        <script type="text/javascript">
+          //*****URL**PARAMETERS*******//
+          var urlParameter = new Object;
+          var pair = location.search.substring(1).split('&');
+          for (var i = 0; pair[i]; i++) {
+            var kv = pair[i].split('=');
+            urlParameter[kv[0]] = kv[1];
+          }
+          var groupID_of_currentUser
+
+          //disable navigation button if an user is at initial setting
+          //?status=initial_setting
+
+          if (urlParameter.status == 'initial_setting') {
+            //dont forget include & if you have multiple parameters
+            //非同期処理関連　苦肉の策
+            setTimeout(() => {
+              var button_elm = document.querySelector("body > div > div > header > div.mdl-layout__drawer-button")
+              button_elm.parentNode.removeChild(button_elm)
+              document.getElementById('initial_setting').innerText = `${firebase.auth().currentUser.displayName}さん、はじめまして！次はグループを作成しましょう！`
+            }, 1000)
+
+
+          }
+
+
+
+          //***********************
+          var db = firebase.firestore()
+
+          var snackbarContainer = document.querySelector('#demo-toast-example');
+          function toastbar(text) {
+            snackbarContainer.MaterialSnackbar.showSnackbar({
+              message: text
+            })
+          }
+
+          //draw lists of people (it doesnt create forms for miodifying each attribute) //afternoon
+          function drawListOfOnePerson(personIndex, name, description) {
+            template_person = '<ul class="demo-list-three mdl-list">' +
+              '<li class="mdl-list__item mdl-list__item--three-line">' +
+              '<span class="mdl-list__item-primary-content">' +
+              '<i class="material-icons mdl-list__item-avatar">person</i>' +
+              '<span contenteditable="true" id="editArea_name_' + personIndex + '">' + name + '</span>' +
+              '<span class="mdl-list__item-text-body" contenteditable="true" id="editArea_description_' + personIndex + '">' + description +
+              '</span>' +
+              '</span>' +
+              '</li>' +
+              '<span id="editArea_' + personIndex + '">' +
+              '</span>' + '<a href="javascript:drawFormOfOnePerson(' + personIndex +
+              ')">'
+            //contenteditable での改行処理は後回しにする
+            //上でmdlのデザインが適用されてない。これはまた今度解消
+            document.getElementById('person').innerHTML += template_person
+            //ボタンにイベントを追加
+          }
+
+
+          //afternoon
+          function getNameTextFromContenteditable(personIndex) {
+            return document.getElementById(`editArea_name_${personIndex}`).innerText
+          }
+
+          function getDescriptionFromContenteditable(personIndex) {
+            return document.getElementById(`editArea_description_${personIndex}`).innerText
+          }
+
+
+
+          //returns true or false //check
+          function checkFormContenteditable() { //length //for
+            for (i = 0; i < length_of_profiles; i++) {
+
+              //namespaceok //edit
+              if (!getNameTextFromContenteditable(i)) {
+                toastbar('入力欄が空白です')
+                //fill space with default templates
+                for (var j = 0; j < length_of_profiles; j++) {
+                  if (!getNameTextFromContenteditable(j)) {
+                    document.getElementById('editArea_name_' + j).innerText = "新しいメンバー（タップして編集）"
                   }
-              
-                  if(!getDescriptionFromContenteditable(i)){
-                    //alert('space desc.'+i)
-                    //spacewをデフォルトに戻す
-                    toastbar('入力欄が空白です')
-                    document.getElementById('editArea_description_'+i).innerText="新しいメンバーの自己紹介（タップして編集）"
-                    //fill space with default templates
-                    for(var j=0;j<length_of_profiles;j++){
-                      if(!getDescriptionFromContenteditable(j)){
-                        document.getElementById('editArea_description_'+j).innerText="新しいメンバーの自己紹介（タップして編集）"
-                      }
-                    }
-                    return false
+                }
+              }
+
+              if (!getDescriptionFromContenteditable(i)) {
+                //alert('space desc.'+i)
+                //spacewをデフォルトに戻す
+                toastbar('入力欄が空白です')
+                document.getElementById('editArea_description_' + i).innerText = "新しいメンバーの自己紹介（タップして編集）"
+                //fill space with default templates
+                for (var j = 0; j < length_of_profiles; j++) {
+                  if (!getDescriptionFromContenteditable(j)) {
+                    document.getElementById('editArea_description_' + j).innerText = "新しいメンバーの自己紹介（タップして編集）"
                   }
-              
+                }
+                return false
+              }
+
               //基底値でないかどうか
-                  if(getNameTextFromContenteditable(i)=='新しいメンバー（タップして編集）'){
-                    //alert('space name'+i)
-                    //spacewをデフォルトに戻す
-                    //document.getElementById('editArea_name_'+i).innerText="新しいメンバー（タップして編集）"
-                    toastbar('入力欄が不正です')
-                    return false
-                  }
-              
-                  if(getDescriptionFromContenteditable(i)=='新しいメンバーの自己紹介（タップして編集）'){
-                    //alert('space desc.'+i)
-                    //spacewをデフォルトに戻す
-                    toastbar('入力欄が不正です')
-                    document.getElementById('editArea_description_'+i).innerText="新しいメンバーの自己紹介（タップして編集）"
-                    return false
-                  }
-              
-              
-                  /*
-                  //description space ok
-                  if(!getNameTextFromContenteditable(i)){
-                    toastbar('入力欄が空白です')
-                    console.log('space')
-                    return false
-                  }else if(getNameTextFromContenteditable(i)=='新しいメンバー（タップして編集）'||getDescriptionFromContenteditable(i)=='新しいメンバーの自己紹介（タップして編集）'){
-                    toastbar('入力欄が不正です')
-                    return false
-                  }
-                  */
-                }
-                return true
+              if (getNameTextFromContenteditable(i) == '新しいメンバー（タップして編集）') {
+                //alert('space name'+i)
+                //spacewをデフォルトに戻す
+                //document.getElementById('editArea_name_'+i).innerText="新しいメンバー（タップして編集）"
+                toastbar('入力欄が不正です')
+                return false
               }
-              
-              
-              function updateListOnFirestore(){
-                db.collection('groups').doc(groupID_of_currentUser).set({profiles:getListObjectFromContenteditable()},{merge:true}).catch((errorL)=>{console.log(error)})    
-               
-              
-              
+
+              if (getDescriptionFromContenteditable(i) == '新しいメンバーの自己紹介（タップして編集）') {
+                //alert('space desc.'+i)
+                //spacewをデフォルトに戻す
+                toastbar('入力欄が不正です')
+                document.getElementById('editArea_description_' + i).innerText = "新しいメンバーの自己紹介（タップして編集）"
+                return false
               }
-              
-              
-              
-              //c.f. https://qiita.com/awesam86/items/e2490be19f73ab0bdd87
-              function removeObjectFieldWithIndex(object,removeIndex){
-                //object should be like this: {0:"a",1:"b"}
-                //when you remove one element from object like this, {0:'hoge0',1:'hoge1',2:'hoge2'}
-                //removeObjectFieldWithIndex not only removes but also rename all of the indecies of the object
-              
-                var obj = object
-                var first_len=Object.keys(obj).length
-                for(var i=removeIndex;i<first_len-1;i++){
-                  console.log('i:',i)
-                  obj[i]=obj[i+1]
-                };
-                  delete obj[first_len-1]
-                  return obj
-              }
-              
-              
-              
-              
-              function getListObjectFromContenteditable(){ //for //copy
-                var objectOfContenteditable={}
-                for(i=0;i<length_of_profiles;i++){
-                  objectOfContenteditable[i]={name:getNameTextFromContenteditable(i),description:getDescriptionFromContenteditable(i)}
-                }  
-                return objectOfContenteditable
-              }
-              
-              
-              function notify_error(text,error){
-                    console.log(`error:${error}`)
-                    document.querySelector("body > div > div > main").innerHTML=`<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">`
-                    +text
-                    +`<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="window.location.href='dashboard.html'">ダッシュボードに戻る</button> `
-                    +`<br>デバッグ情報:${error}`
-                    +`</div>`
-              }
-              
-              //311
-              function updateList() { //length //afternoon //object //copy
-                db.collection('groups').doc(groupID_of_currentUser).get().then((doc) => {
-                  //console.log(doc.data()['profiles']['length'])
-                  try{
-                    length_of_profiles = Object.keys(doc.data()['profiles']).length
-                  }catch(error){
-                    notify_error('グループ情報が読み込めません。グループが存在しない、または正しいグループのIDが指定されていない可能性があります。',error)
-                  }
-              
-              
-              
-                  for (var i = 0; i < length_of_profiles; i++) {
-                    ((callback) => {
-                      drawListOfOnePerson(i, doc.data()['profiles'][i]['name'], doc.data()['profiles'][i]['description'])
-                    })()
-                  }
-                })
-              
-              }
-              
-              function addPersonToList(){
-              　//実際のDOMエレメントをふやす
-                drawListOfOnePerson(length_of_profiles,"新しいメンバー（タップして編集）","新しいメンバーの自己紹介（タップして編集）")
-              　//length変数をふやす 非同期処理の特性を考えて、念には念の苦肉の策
-                setTimeout(()=>{length_of_profiles++},200)
-              }
-              
-              //morning
-              
-              
-              
-              
-              //on button, trigger selectPersonToRemoveFromFirestore()
-              //at selectPersonToRemoveFromFirestore(), add onclick event to every editArea_[personIndex] and get which one user clicked,(with personIndex)
-              //then, removeConfirmatino(personIndex)
-              // note: removeConfirmation returns true of false
-              //then, trigger removePersonFromFirestore(personIndex)
-              //confrimation
-              
-              function selectPersonToRemoveFromFirestore(){
-                toastbar('削除するメンバーのアイコンをタップしてください')
-                for(var i=1;i<length_of_profiles;i++){
-                  //note: I did not include i=0 case here. This is to prevent users to remove Kanji-user from the memmber lists.
-                  //icons modification
-                  document.querySelector(`#person > ul:nth-child(${i+1}) > li > span > i`).innerText='remove_circle'    
-                  //add onclick
-                  addOnclickEventToListIcons(i)
-              
-                }
-                //confirmation "are you sure to remove him/her?"
-                //then, 
-              
-                //removePersonFromFirestore(personIndex)
-              
-              
-              }
-              function addOnclickEventToListIcons(personIndex){
-              
-                document.querySelector(`#person > ul:nth-child(${personIndex+1}) > li > span > i`).onclick=()=>{
-                  //alert(`personIndex:${personIndex} icon element`)
-                  //removing from firestore //1st, without confirmation
-                  removePersonFromFirestore(personIndex);
-                }    
-              
-              }
-              
-              //first of all, make a function to remove person from firestore
-              //you dont have to care about ui/ux at this point //morning
-              var objectOfListFromFirestore={} 
-              
-              function removePersonFromFirestore(personIndex){ //edit
-                //getting object from firestore first
-              //  var objectOfListFromFirestore={} 
-                db.collection('groups').doc(groupID_of_currentUser).get().then((doc) => {
-                  console.log('profiles gained from firestore:',doc.data()['profiles'])
-                  //length_of_profiles = Object.keys(doc.data()['profiles']).length
-                  //objectOfListFromFirestore=doc.data()
-                  //console.log(objectOfListFromFirestore)
-                  var whole_group_data=doc.data()
-                  whole_group_data['profiles']=removeObjectFieldWithIndex(whole_group_data['profiles'],personIndex)
-                  console.log('modified whole doc.data() of group data',whole_group_data['profiles'])
-              
-                  //firestore
-                  db.collection('groups').doc(groupID_of_currentUser).set(whole_group_data).then(()=>{
-                    toastbar('メンバーは削除されました。再読み込みしています。')
-                    setTimeout(()=>{location.reload()},1000) 
-                  })
-              
-              
-              
-                  //.then refresh
-              
-              
-                  //changing object indecies
-                  //if rm2-> 1,[3,4,5]
-                  //obj[removeIndex]=obj[|3|]
-                  //|num| =3,4,5,=from removeIndex+1 to length-1
-                  //i=from removeIndex to length-2
-              
-              
-              
-              
-              
-                  //setting into firestore
-                  //db.collection('groups')
-              
-                  /*
-                  for (var i = 0; i < length_of_profiles; i++) {
-                    ((callback) => {
-                      drawListOfOnePerson(i, doc.data()['profiles'][i]['name'], doc.data()['profiles'][i]['description'])
-                    })()
-                  }*/
-                })
-              
-              
-              
-                //db.collection('groups').doc(groupID_of_currentUser).set(obj_fixed)
-              }
-              
-              //createGroup()を作る
-              //temporal //notyet //incomplete
-                    function createGroup(groupData) {
-                      //
-                      //todo 取得をdoc()でやってみる
-                      db.collection('groups').add(groupData).then(function (docRef) {
-                        console.log("groupData successfully written into 'groups/' (groupid generated randomly)");
-                        console.log("generated groupid in 'groups':" + docRef.id)
-                        //user.idに１つ割り当てられるcollectionにアクセスしdocRefを記録する処理
-                        //user info update here
-                        //users/[uid]/groupIDが存在している場合を前提としている
-                        // groupIDをusers/DKDJSkdfj groupIDにほぞん
-                        db.collection('users').doc(getCurrentuserUid()).set({
-                          groupID: firebase.firestore.FieldValue.arrayUnion(docRef.id)
-                        },{merge:true}).then(function () {
-                          console.log('group id has been stored into users/[uid]/groupID')
-                        });
-                      })
-                    }
-                    //Actually creating a group here:
-              
+
+
               /*
-              function initGroup(groupID){
-                testみたいな内容をコピーして、groupがなければここでグループ構造の初期化してしまうか
+              //description space ok
+              if(!getNameTextFromContenteditable(i)){
+                toastbar('入力欄が空白です')
+                console.log('space')
+                return false
+              }else if(getNameTextFromContenteditable(i)=='新しいメンバー（タップして編集）'||getDescriptionFromContenteditable(i)=='新しいメンバーの自己紹介（タップして編集）'){
+                toastbar('入力欄が不正です')
+                return false
               }
               */
-              //notyet //temporal
-              function test(){
-                    createGroup({
-                      groupName: 'グループの名前',
-                      avatarImage: 'person_placeholder.png',
-                      numberOfPeople: 3,
-                      profiles: [{
-                        name: 'takashi',
-                        description: 'jijki'
-                      }, {
-                        name: 'takeda',
-                        description: '下の方'
-                      }],
-                      groupDescription: "I'm looking forward to seeing you guys!",
-                      accountID: getCurrentuserUid()
-                    })  
-              }
-              
-              //urlparamがgetstartedの時のみグループを初めて作成する仕様にするかも
-            </script>
-        </div>
-    </main>
-    </div>
-    <style>
-      #complete_button{
-        visibility: hidden;
-      }
-      
-      #mediaCapture{
-        display:none;
-      }
-    </style>
-    <script type="text/javascript">
-      //url param  //edit 
-      
-      
-      
-      // Shortcuts to DOM Elements.
-      //var messageListElement = document.getElementById('messages');
-      //var messageFormElement = document.getElementById('message-form');
-      //var messageInputElement = document.getElementById('message');
-      //var submitButtonElement = document.getElementById('submit');
-      var imageButtonElement = document.getElementById('submitImage');
-      var imageFormElement = document.getElementById('image-form');
-      var mediaCaptureElement = document.getElementById('mediaCapture');
-      //var userPicElement = document.getElementById('user-pic');
-      //var userNameElement = document.getElementById('user-name');
-      //var signInButtonElement = document.getElementById('sign-in');
-      //var signOutButtonElement = document.getElementById('sign-out');
-      //var signInSnackbarElement = document.getElementById('must-signin-snackbar');
-      
-      //updating forms first
-      
-      /*
-       **********UNIGOKON SETTING FROM HERE*********
-       */
-      
-      //note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
-      /*デバッグ時に変更が適用されたかどうかを以下でチェック*/
-      //後々実名変更回数制限を設ける
-      //今は実装しない
-      //グループプロファイルのplaceholderつくる
-      //初回ログイン時にphotoURLをplaceholderのURLにする
-      
-      //これを使わずその都度firebaseオブジェクトから呼び出せば良い
-      /*
-       **********UNIGOKON SETTING END HERE**********
-       */
-      
-        
-      
-      
-      
-      firebase.auth().onAuthStateChanged(authStateObserver)
-      
-      
-      function authStateObserver(user) {
-        if (user) {
-          console.log('login status: in')
-
-          toastbar("グループプロフィールを充実させましょう！")
-
-          firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc)=>{
-            console.log('successfully fetched users primary groupID',doc.data()['groupID'][0])
-            groupID_of_currentUser=doc.data()['groupID'][0]
-
-
-            //---async. init here //311
-            //updating forms here!
-            updateFrom()
-        
-            //showing all person in the group
-            updateList()
-        
-            //updating placehoulder here
-            updatePlaceholder()
-            //---
-            loadfinish()            
-          })
-
-      
-      
-      
-        } else {
-          console.log('login status: out')
-          alert('ログインしていません')
-          window.location.href = 'index.html'
-        }
-      }
-      
-      
-      //---integrating from toast.html
-      //------integrating from toastbar.html--------
-      //-------------------
-      //mail check function
-      //-------------------
-      function MailCheck( mail ) {
-          var mail_regex1 = new RegExp( '(?:[-!#-\'*+/-9=?A-Z^-~]+\.?(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*|"(?:[!#-\[\]-~]|\\\\[\x09 -~])*")@[-!#-\'*+/-9=?A-Z^-~]+(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*' );
-          var mail_regex2 = new RegExp( '^[^\@]+\@[^\@]+$' );
-          if( mail.match( mail_regex1 ) && mail.match( mail_regex2 ) ) {
-              // 全角チェック
-              if( mail.match( /[^a-zA-Z0-9\!\"\#\$\%\&\'\(\)\=\~\|\-\^\\\@\[\;\:\]\,\.\/\\\<\>\?\_\`\{\+\*\} ]/ ) ) { return false; }
-              // 末尾TLDチェック（〜.co,jpなどの末尾ミスチェック用）
-              if( !mail.match( /\.[a-z]+$/ ) ) { return false; }
-              return true;
-          } else {
-              return false;
+            }
+            return true
           }
+
+
+          function updateListOnFirestore() {
+            db.collection('groups').doc(groupID_of_currentUser).set({ profiles: getListObjectFromContenteditable() }, { merge: true }).catch((errorL) => { console.log(error) })
+
+
+
+          }
+
+
+
+          //c.f. https://qiita.com/awesam86/items/e2490be19f73ab0bdd87
+          function removeObjectFieldWithIndex(object, removeIndex) {
+            //object should be like this: {0:"a",1:"b"}
+            //when you remove one element from object like this, {0:'hoge0',1:'hoge1',2:'hoge2'}
+            //removeObjectFieldWithIndex not only removes but also rename all of the indecies of the object
+
+            var obj = object
+            var first_len = Object.keys(obj).length
+            for (var i = removeIndex; i < first_len - 1; i++) {
+              console.log('i:', i)
+              obj[i] = obj[i + 1]
+            };
+            delete obj[first_len - 1]
+            return obj
+          }
+
+
+
+
+          function getListObjectFromContenteditable() { //for //copy
+            var objectOfContenteditable = {}
+            for (i = 0; i < length_of_profiles; i++) {
+              objectOfContenteditable[i] = { name: getNameTextFromContenteditable(i), description: getDescriptionFromContenteditable(i) }
+            }
+            return objectOfContenteditable
+          }
+
+
+          function notify_error(text, error) {
+            console.log(`error:${error}`)
+            document.querySelector("body > div > div > main").innerHTML = `<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">`
+              + text
+              + `<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="window.location.href='dashboard.html'">ダッシュボードに戻る</button> `
+              + `<br>デバッグ情報:${error}`
+              + `</div>`
+          }
+
+          //311
+          function updateList() { //length //afternoon //object //copy
+            db.collection('groups').doc(groupID_of_currentUser).get().then((doc) => {
+              //console.log(doc.data()['profiles']['length'])
+              try {
+                length_of_profiles = Object.keys(doc.data()['profiles']).length
+              } catch (error) {
+                notify_error('グループ情報が読み込めません。グループが存在しない、または正しいグループのIDが指定されていない可能性があります。', error)
+              }
+
+
+
+              for (var i = 0; i < length_of_profiles; i++) {
+                ((callback) => {
+                  drawListOfOnePerson(i, doc.data()['profiles'][i]['name'], doc.data()['profiles'][i]['description'])
+                })()
+              }
+            })
+
+          }
+
+          function addPersonToList() {
+            //実際のDOMエレメントをふやす
+            drawListOfOnePerson(length_of_profiles, "新しいメンバー（タップして編集）", "新しいメンバーの自己紹介（タップして編集）")
+            //length変数をふやす 非同期処理の特性を考えて、念には念の苦肉の策
+            setTimeout(() => { length_of_profiles++ }, 200)
+          }
+
+          //morning
+
+
+
+
+          //on button, trigger selectPersonToRemoveFromFirestore()
+          //at selectPersonToRemoveFromFirestore(), add onclick event to every editArea_[personIndex] and get which one user clicked,(with personIndex)
+          //then, removeConfirmatino(personIndex)
+          // note: removeConfirmation returns true of false
+          //then, trigger removePersonFromFirestore(personIndex)
+          //confrimation
+
+          function selectPersonToRemoveFromFirestore() {
+            toastbar('削除するメンバーのアイコンをタップしてください')
+            for (var i = 1; i < length_of_profiles; i++) {
+              //note: I did not include i=0 case here. This is to prevent users to remove Kanji-user from the memmber lists.
+              //icons modification
+              document.querySelector(`#person > ul:nth-child(${i + 1}) > li > span > i`).innerText = 'remove_circle'
+              //add onclick
+              addOnclickEventToListIcons(i)
+
+            }
+            //confirmation "are you sure to remove him/her?"
+            //then, 
+
+            //removePersonFromFirestore(personIndex)
+
+
+          }
+          function addOnclickEventToListIcons(personIndex) {
+
+            document.querySelector(`#person > ul:nth-child(${personIndex + 1}) > li > span > i`).onclick = () => {
+              //alert(`personIndex:${personIndex} icon element`)
+              //removing from firestore //1st, without confirmation
+              removePersonFromFirestore(personIndex);
+            }
+
+          }
+
+          //first of all, make a function to remove person from firestore
+          //you dont have to care about ui/ux at this point //morning
+          var objectOfListFromFirestore = {}
+
+          function removePersonFromFirestore(personIndex) { //edit
+            //getting object from firestore first
+            //  var objectOfListFromFirestore={} 
+            db.collection('groups').doc(groupID_of_currentUser).get().then((doc) => {
+              console.log('profiles gained from firestore:', doc.data()['profiles'])
+              //length_of_profiles = Object.keys(doc.data()['profiles']).length
+              //objectOfListFromFirestore=doc.data()
+              //console.log(objectOfListFromFirestore)
+              var whole_group_data = doc.data()
+              whole_group_data['profiles'] = removeObjectFieldWithIndex(whole_group_data['profiles'], personIndex)
+              console.log('modified whole doc.data() of group data', whole_group_data['profiles'])
+
+              //firestore
+              db.collection('groups').doc(groupID_of_currentUser).set(whole_group_data).then(() => {
+                toastbar('メンバーは削除されました。再読み込みしています。')
+                setTimeout(() => { location.reload() }, 1000)
+              })
+
+
+
+              //.then refresh
+
+
+              //changing object indecies
+              //if rm2-> 1,[3,4,5]
+              //obj[removeIndex]=obj[|3|]
+              //|num| =3,4,5,=from removeIndex+1 to length-1
+              //i=from removeIndex to length-2
+
+
+
+
+
+              //setting into firestore
+              //db.collection('groups')
+
+              /*
+              for (var i = 0; i < length_of_profiles; i++) {
+                ((callback) => {
+                  drawListOfOnePerson(i, doc.data()['profiles'][i]['name'], doc.data()['profiles'][i]['description'])
+                })()
+              }*/
+            })
+
+
+
+            //db.collection('groups').doc(groupID_of_currentUser).set(obj_fixed)
+          }
+
+          //createGroup()を作る
+          //temporal //notyet //incomplete
+          function createGroup(groupData) {
+            //
+            //todo 取得をdoc()でやってみる
+            db.collection('groups').add(groupData).then(function (docRef) {
+              console.log("groupData successfully written into 'groups/' (groupid generated randomly)");
+              console.log("generated groupid in 'groups':" + docRef.id)
+              //user.idに１つ割り当てられるcollectionにアクセスしdocRefを記録する処理
+              //user info update here
+              //users/[uid]/groupIDが存在している場合を前提としている
+              // groupIDをusers/DKDJSkdfj groupIDにほぞん
+              db.collection('users').doc(getCurrentuserUid()).set({
+                groupID: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+              }, { merge: true }).then(function () {
+                console.log('group id has been stored into users/[uid]/groupID')
+              });
+            })
+          }
+          //Actually creating a group here:
+
+          /*
+          function initGroup(groupID){
+            testみたいな内容をコピーして、groupがなければここでグループ構造の初期化してしまうか
+          }
+          */
+          //notyet //temporal
+          function test() {
+            createGroup({
+              groupName: 'グループの名前',
+              avatarImage: 'person_placeholder.png',
+              numberOfPeople: 3,
+              profiles: [{
+                name: 'takashi',
+                description: 'jijki'
+              }, {
+                name: 'takeda',
+                description: '下の方'
+              }],
+              groupDescription: "I'm looking forward to seeing you guys!",
+              accountID: getCurrentuserUid()
+            })
+          }
+
+              //urlparamがgetstartedの時のみグループを初めて作成する仕様にするかも
+        </script>
+      </div>
+    </main>
+  </div>
+  <style>
+    #complete_button {
+      visibility: hidden;
+    }
+
+    #mediaCapture {
+      display: none;
+    }
+  </style>
+  <script type="text/javascript">
+    //url param  //edit 
+
+
+
+    // Shortcuts to DOM Elements.
+    //var messageListElement = document.getElementById('messages');
+    //var messageFormElement = document.getElementById('message-form');
+    //var messageInputElement = document.getElementById('message');
+    //var submitButtonElement = document.getElementById('submit');
+    var imageButtonElement = document.getElementById('submitImage');
+    var imageFormElement = document.getElementById('image-form');
+    var mediaCaptureElement = document.getElementById('mediaCapture');
+    //var userPicElement = document.getElementById('user-pic');
+    //var userNameElement = document.getElementById('user-name');
+    //var signInButtonElement = document.getElementById('sign-in');
+    //var signOutButtonElement = document.getElementById('sign-out');
+    //var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+
+    //updating forms first
+
+    /*
+     **********UNIGOKON SETTING FROM HERE*********
+     */
+
+    //note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
+    /*デバッグ時に変更が適用されたかどうかを以下でチェック*/
+    //後々実名変更回数制限を設ける
+    //今は実装しない
+    //グループプロファイルのplaceholderつくる
+    //初回ログイン時にphotoURLをplaceholderのURLにする
+
+    //これを使わずその都度firebaseオブジェクトから呼び出せば良い
+    /*
+     **********UNIGOKON SETTING END HERE**********
+     */
+
+
+
+
+
+    firebase.auth().onAuthStateChanged(authStateObserver)
+
+
+    function authStateObserver(user) {
+      if (user) {
+        console.log('login status: in')
+
+        toastbar("グループプロフィールを充実させましょう！")
+
+        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
+          console.log('successfully fetched users primary groupID', doc.data()['groupID'][0])
+          groupID_of_currentUser = doc.data()['groupID'][0]
+
+
+          //---async. init here //311
+          //updating forms here!
+          updateFrom()
+
+          //showing all person in the group
+          updateList()
+
+          //updating placehoulder here
+          updatePlaceholder()
+          //---
+          loadfinish()
+        })
+
+
+
+
+      } else {
+        console.log('login status: out')
+        alert('ログインしていません')
+        window.location.href = 'index.html'
       }
-      //参考にさせていただきました
-      //https://kantaro-cgi.com/blog/javascript/javascript_mailaddress_check.html
-      //-------------------
-      
-      //loading
-      function loadstart(){
-          document.getElementById('progressbar').style.visibility='visible'
+    }
+
+
+    //---integrating from toast.html
+    //------integrating from toastbar.html--------
+    //-------------------
+    //mail check function
+    //-------------------
+    function MailCheck(mail) {
+      var mail_regex1 = new RegExp('(?:[-!#-\'*+/-9=?A-Z^-~]+\.?(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*|"(?:[!#-\[\]-~]|\\\\[\x09 -~])*")@[-!#-\'*+/-9=?A-Z^-~]+(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*');
+      var mail_regex2 = new RegExp('^[^\@]+\@[^\@]+$');
+      if (mail.match(mail_regex1) && mail.match(mail_regex2)) {
+        // 全角チェック
+        if (mail.match(/[^a-zA-Z0-9\!\"\#\$\%\&\'\(\)\=\~\|\-\^\\\@\[\;\:\]\,\.\/\\\<\>\?\_\`\{\+\*\} ]/)) { return false; }
+        // 末尾TLDチェック（〜.co,jpなどの末尾ミスチェック用）
+        if (!mail.match(/\.[a-z]+$/)) { return false; }
+        return true;
+      } else {
+        return false;
       }
-      function loadfinish(){
-          document.getElementById('progressbar').style.visibility='hidden'
-      }
-      
-      
-      
-      
-      //DOM shorcuts
-      //toastbar reference
-      //https://www.w3schools.com/howto/howto_js_snackbar.asp
-      
-      //311
-      function updateFrom(){ 
-        //forms updating
-        db.collection('groups').doc(groupID_of_currentUser).get().then((doc)=>{
-      
-          document.getElementById("input_0").value=doc.data()["groupName"]||""
-          document.getElementById("input_1").value=doc.data()["groupDescription"]||""
-          //document.getElementById("input_2").value=doc.data()["mail"]||""
-          console.log(doc.data())
-        }).catch((error)=>{console.log(error)})
-      }
-      
-      
-      
-      
-      function saveProfile(){ //check
-        if(isProfileValid()&&checkFormContenteditable()){
-          
-          //loading display
-          loadstart()
-          updateListOnFirestore()
-          //firebase-
-          db.collection("groups").doc(groupID_of_currentUser).set({
-      
-            groupName:document.getElementById("input_0").value,
-            groupDescription:document.getElementById("input_1").value,
-            
-          },{merge:true}).then(()=>{
-            toastbar("グループプロフィールが正常に保存されました")
-            loadfinish();
-            updateFrom()
-            document.getElementById('complete_button').style.visibility='visible'
-      
-          })
-          //firebase--
-        }
-      }
-      
-      /*************GROUPPROFILE PICTURE*****************/
-      /************************************************/
-      
-      // Triggered when a file is selected via the media picker.
-      function onMediaFileSelected(event) {
-        event.preventDefault();
-        var file = event.target.files[0];
-      
-        // Clear the selection in the file picker input.
-        imageFormElement.reset();
-      
-        // Check if the file is an image.
-        if (!file.type.match('image.*')) {
-          toastbar("ファイルの形式が画像ではありません")
-          return;
-        }
-        // Check if the user is signed-in
-        if(!!firebase.auth().currentUser){
-          uploadProfilePicture(file);
-        }
-      }
-      
-      // Events for image upload.
-      imageButtonElement.addEventListener('click', function(e) {
-        e.preventDefault();
-        mediaCaptureElement.click();
-      });
-      mediaCaptureElement.addEventListener('change', onMediaFileSelected);
-      
-      
-      function uploadProfilePicture(file_arg){
-        toastbar("画像をアップロードしています")
+    }
+    //参考にさせていただきました
+    //https://kantaro-cgi.com/blog/javascript/javascript_mailaddress_check.html
+    //-------------------
+
+    //loading
+    function loadstart() {
+      document.getElementById('progressbar').style.visibility = 'visible'
+    }
+    function loadfinish() {
+      document.getElementById('progressbar').style.visibility = 'hidden'
+    }
+
+
+
+
+    //DOM shorcuts
+    //toastbar reference
+    //https://www.w3schools.com/howto/howto_js_snackbar.asp
+
+    //311
+    function updateFrom() {
+      //forms updating
+      db.collection('groups').doc(groupID_of_currentUser).get().then((doc) => {
+
+        document.getElementById("input_0").value = doc.data()["groupName"] || ""
+        document.getElementById("input_1").value = doc.data()["groupDescription"] || ""
+        //document.getElementById("input_2").value=doc.data()["mail"]||""
+        console.log(doc.data())
+      }).catch((error) => { console.log(error) })
+    }
+
+
+
+
+    function saveProfile() { //check
+      if (isProfileValid() && checkFormContenteditable()) {
+
+        //loading display
         loadstart()
-        //uploading 
-        //changing placehoulder in DOM elements temporalily
-        document.getElementById("placeholder").src="loading.jpg"
-        //ここは後で調整　比
-        document.getElementById("placeholder").style.height='300px'
-        document.getElementById("placeholder").style.width='300px'
-      
-        // 2 - Upload the image to Cloud Storage.
-        var filePath = 'users'+getCurrentuserUid()+'/'+file_arg.name
-        return firebase.storage().ref(filePath).put(file_arg).then(function(fileSnapshot) {
+        updateListOnFirestore()
+        //firebase-
+        db.collection("groups").doc(groupID_of_currentUser).set({
+
+          groupName: document.getElementById("input_0").value,
+          groupDescription: document.getElementById("input_1").value,
+
+        }, { merge: true }).then(() => {
+          toastbar("グループプロフィールが正常に保存されました")
+          loadfinish();
+          updateFrom()
+          document.getElementById('complete_button').style.visibility = 'visible'
+
+        })
+        //firebase--
+      }
+    }
+
+    /*************GROUPPROFILE PICTURE*****************/
+    /************************************************/
+
+    // Triggered when a file is selected via the media picker.
+    function onMediaFileSelected(event) {
+      event.preventDefault();
+      var file = event.target.files[0];
+
+      // Clear the selection in the file picker input.
+      imageFormElement.reset();
+
+      // Check if the file is an image.
+      if (!file.type.match('image.*')) {
+        toastbar("ファイルの形式が画像ではありません")
+        return;
+      }
+      // Check if the user is signed-in
+      if (!!firebase.auth().currentUser) {
+        uploadProfilePicture(file);
+      }
+    }
+
+    // Events for image upload.
+    imageButtonElement.addEventListener('click', function (e) {
+      e.preventDefault();
+      mediaCaptureElement.click();
+    });
+    mediaCaptureElement.addEventListener('change', onMediaFileSelected);
+
+
+    function uploadProfilePicture(file_arg) {
+      toastbar("画像をアップロードしています")
+      loadstart()
+      //uploading 
+      //changing placehoulder in DOM elements temporalily
+      document.getElementById("placeholder").src = "loading.jpg"
+      //ここは後で調整　比
+      document.getElementById("placeholder").style.height = '300px'
+      document.getElementById("placeholder").style.width = '300px'
+
+      // 2 - Upload the image to Cloud Storage.
+      var filePath = 'users' + getCurrentuserUid() + '/' + file_arg.name
+      return firebase.storage().ref(filePath).put(file_arg).then(function (fileSnapshot) {
         // 3 - Generate a public URL for the file.
         return fileSnapshot.ref.getDownloadURL().then((url) => {
-        // 4 - Update the chat message placeholder with the image’s URL.
+          // 4 - Update the chat message placeholder with the image’s URL.
           db.collection("groups").doc(groupID_of_currentUser).set({
-            avatarImage:url
-          },{merge:true}).then(()=>updatePlaceholder())
-      
-      
+            avatarImage: url
+          }, { merge: true }).then(() => updatePlaceholder())
+
+
           toastbar("画像が正常にアップロードされました")
           loadfinish()
         });
       });
-      
-      
-      
-        //updating url in firestoere
-      
-        //aftere url refresh, then execute this
-        //updatePlaceholder()
-      }
-      
-      //gettingg profile pic url and replacing placeholder
-      function updatePlaceholder(){
-       
-        db.collection("groups").doc(groupID_of_currentUser).get().then((doc)=>{
-          document.getElementById("placeholder").src=doc.data()['avatarImage']||"person_placeholder.png"
-        })
-      }
-      /************************************************/
-      /************************************************/
-      /************************************************/
-      
-      function getCurrentuserUid(){
-        return firebase.auth().currentUser.uid
-      }
-      /*
-      function resizePlaceholder(){
-        var height=document.getElementById('placeholder').naturalHeight
-        var width=document.getElementById('placeholder').naturalWidth
-        document.getElementById('placeholder').style.objectFit='cover'
-      
-        if(height>width){
-          toastbar('height outweighs width')
-          document.getElementById('placeholder').style.width=window.innerWidth*0.
-          //document.getElementById('placeholder').style.height=window.parent.screen width
-          document.getElementById('placeholder').style.height=window.innerWidth
-        }else{
-          toastbar('width outweighs height')
-          document.getElementById('placeholder').style.width=window.innerHeight
-          document.getElementById('placeholder').style.height=window.innerHeight
-        }
-        
-      }
-      */
-      
-      
-      
-      function isProfileValid() { 
-        // Get the snackbar DIV
-        var requirements=[false,false,false];
-        
-        var i;
-      
-      
-        for(i=0;i<2;i++){
-          var values=document.getElementById('input_'+i).value
-          if(values==""){
-            toastbar("入力欄が空白または不正です")
-          }else{
-      
-            if(i==0){
-              //name
-              requirements[0]=true;
-              
-            }else if(i==1){
-              //nickname
-              requirements[i]=true
-            }
-          }
-      
-        }
-        
-        if(requirements[0]&&requirements[1]){
-          return true;
-        }else{return false}
-      
-      }
-      
-      
-      
-      
-      
-      //todo html書き換え
-    </script>
 
-<script type="text/javascript" src="sidebar_nav.js"></script>
+
+
+      //updating url in firestoere
+
+      //aftere url refresh, then execute this
+      //updatePlaceholder()
+    }
+
+    //gettingg profile pic url and replacing placeholder
+    function updatePlaceholder() {
+
+      db.collection("groups").doc(groupID_of_currentUser).get().then((doc) => {
+        document.getElementById("placeholder").src = doc.data()['avatarImage'] || "person_placeholder.png"
+      })
+    }
+    /************************************************/
+    /************************************************/
+    /************************************************/
+
+    function getCurrentuserUid() {
+      return firebase.auth().currentUser.uid
+    }
+    /*
+    function resizePlaceholder(){
+      var height=document.getElementById('placeholder').naturalHeight
+      var width=document.getElementById('placeholder').naturalWidth
+      document.getElementById('placeholder').style.objectFit='cover'
+    
+      if(height>width){
+        toastbar('height outweighs width')
+        document.getElementById('placeholder').style.width=window.innerWidth*0.
+        //document.getElementById('placeholder').style.height=window.parent.screen width
+        document.getElementById('placeholder').style.height=window.innerWidth
+      }else{
+        toastbar('width outweighs height')
+        document.getElementById('placeholder').style.width=window.innerHeight
+        document.getElementById('placeholder').style.height=window.innerHeight
+      }
+      
+    }
+    */
+
+
+
+    function isProfileValid() {
+      // Get the snackbar DIV
+      var requirements = [false, false, false];
+
+      var i;
+
+
+      for (i = 0; i < 2; i++) {
+        var values = document.getElementById('input_' + i).value
+        if (values == "") {
+          toastbar("入力欄が空白または不正です")
+        } else {
+
+          if (i == 0) {
+            //name
+            requirements[0] = true;
+
+          } else if (i == 1) {
+            //nickname
+            requirements[i] = true
+          }
+        }
+
+      }
+
+      if (requirements[0] && requirements[1]) {
+        return true;
+      } else { return false }
+
+    }
+
+
+
+
+
+      //todo html書き換え
+  </script>
+
+  <script type="text/javascript" src="sidebar_nav.js"></script>
 
 
 </body>
+
 </html>
