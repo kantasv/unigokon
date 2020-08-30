@@ -1,5 +1,6 @@
 # unigokon
 prototype of group-matching app using Firebase
+You can see it is actually working on https://unigokon.web.app/
 
 features
 1. Login feature with Google account
