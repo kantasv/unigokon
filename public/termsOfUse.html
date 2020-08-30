@@ -23,7 +23,7 @@
         メールアドレスで登録する際に大学支給のメールアカウントを利用する必要があります。メールは基本的に大学生の身分証明のみに利用されますが、その他の目的で大学支給のメールアカウントにメッセージや通知を送信したりすることはありません。大学支給のメールアカウントを利用しない場合は後に学生証をアップロードする（安全なセキュリティが確保されています）必要がありますが、確認プロセスの複雑さから推奨されていません。大学支給のメールアカウントとは@daigaku.ac.jpの形のメールアドレスです。
     </h6>
     <center>
-      <span id='confirmation'>利用規約に同意する</span>
+      <span id='goback'>戻る</span>
     </center>
     <center>
       <h6>©2019 UniGokon. All rights reserved.</h6>
@@ -37,6 +37,9 @@
         };
         
     };
+    document.getElementById('goback').onclick=()=>{
+      history.back()
+    }
     
         
     moveto('startbutton','getstarted.html')
