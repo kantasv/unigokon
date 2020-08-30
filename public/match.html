@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
@@ -15,6 +16,7 @@
   <script src="/__/firebase/6.6.1/firebase-storage.js"></script>
   <script src="/__/firebase/init.js"></script>
 </head>
+
 <body>
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
@@ -32,309 +34,313 @@
       <!--コンテンツ-->
       <div class="page-content">
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-<!-- Square card -->
-<style>
-.demo-card-square.mdl-card {
-  width: 320px;
-  height: 250px;
-}
-.demo-card-square > .mdl-card__title {
-  color: #fff;
-  background:
-    url() bottom right 15% no-repeat #46B6AC;
-}
-</style>
-
-<div class="demo-card-square mdl-card mdl-shadow--2dp" id='group_overview'>あなたに最適なグループを探しています...
-</div>
-<div id='group_detail'></div>
-<div id='person'></div>
-
-
-<script type="text/javascript">
-
-var urlParameter = new Object;
-var pair=location.search.substring(1).split('&');
-for(var i=0;pair[i];i++) {
-    var kv = pair[i].split('=');
-    urlParameter[kv[0]]=kv[1];
-}
-
-firebase.auth().onAuthStateChanged(authStateObserver)
-
-var groupID
-
+          <!-- Square card -->
+          <style>
+            .demo-card-square.mdl-card {
+              width: 320px;
+              height: 250px;
+            }
+
+            .demo-card-square>.mdl-card__title {
+              color: #fff;
+              background:
+                url() bottom right 15% no-repeat #46B6AC;
+            }
+          </style>
+
+          <div class="demo-card-square mdl-card mdl-shadow--2dp" id='group_overview'>あなたに最適なグループを探しています...
+          </div>
+          <div id='group_detail'></div>
+          <div id='person'></div>
+
+
+          <script type="text/javascript">
+
+            var urlParameter = new Object;
+            var pair = location.search.substring(1).split('&');
+            for (var i = 0; pair[i]; i++) {
+              var kv = pair[i].split('=');
+              urlParameter[kv[0]] = kv[1];
+            }
+
+            firebase.auth().onAuthStateChanged(authStateObserver)
+
+            var groupID
 
-function addGroupOverviewToCard(groupName,groupDescription,avatarImage,groupID){
-  document.getElementById('group_overview').innerHTML=`  <div class="mdl-card__title mdl-card--expand">`+
-      `<h2 class="mdl-card__title-text">`+groupName+`</h2>`+
-    `</div>`+
-    `<div class="mdl-card__supporting-text">`+groupDescription+
-    `</div>`+
-    `<div class="mdl-card__actions mdl-card--border">`+
-      `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id='send_message_button'>`+
-         `チャット`+
-      `</a>`+
-      `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='javascript:window.location.href="match.html";'>`+
-         `再トライ`+
-      `</a>`+
-      `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='javascript:window.location.href="dashboard.html";'>`+
-         `終了`+
-      `</a>`+
-    `</div>`  
-  //document.querySelector("#group_overview > div.mdl-card__title").style.backgroundImage =`url("${avatarImage}") bottom right 0%`;
-
-}
-
-//edit
-// forked from editGroupProfile.html
-function updateList(groupID) { 
-  db.collection('groups').doc(groupID).get().then((doc) => {
-    //console.log(doc.data()['profiles']['length'])
-    try {
-      length_of_profiles = Object.keys(doc.data()['profiles']).length
-    } catch (error) {}
-    for (var i = 0; i < length_of_profiles; i++) {
-      ((callback) => {
-        drawListOfOnePerson(i, doc.data()['profiles'][i]['name'], doc.data()['profiles'][i]['description'])
-      })()
-    }
-  })
-}
-
-
-
-
-function generateChatroomID(group_a,group_b){
-  groups=[group_a,group_b]
-  //console.log(groups)
-  groups.sort()
-  //console.log(groups)
-  return `${groups[0]}_${groups[1]}`
-}
-
-
-
-//edit
-function addGroupDetailToCard(avatarImage){
-  //document.getElementById('group_detail').innerText=avatarImage
-
-  var image_title_obj=document.createElement('h5')
-  image_title_obj.innerText='グループプロフィール画像'
-  document.getElementById('group_detail').appendChild(image_title_obj)
-
-  var avatarImage_obj=document.createElement('img')
-  avatarImage_obj.src=avatarImage
-  document.getElementById('group_detail').appendChild(avatarImage_obj)
-  avatarImage_obj.style.width='100%'
-
-  var groupmember_title_obj=document.createElement('h5')
-  groupmember_title_obj.innerText='メンバーの一覧'
-  document.getElementById('group_detail').appendChild(groupmember_title_obj)
-
-}
-
-
-
-
-
-  //draw lists of people (it doesnt create forms for miodifying each attribute) //afternoon
-  function drawListOfOnePerson(personIndex,name,description){
-    var template_person='<ul class="demo-list-three mdl-list">'+
-        '<li class="mdl-list__item mdl-list__item--three-line">'+
-          '<span class="mdl-list__item-primary-content">'+
-            '<i class="material-icons mdl-list__item-avatar">person</i>'+
-            '<span id="editArea_name_'+personIndex+'">'+name+'</span>'+
-            '<span class="mdl-list__item-text-body" id="editArea_description_'+personIndex+'">'+description+
-            '</span>'+
-          '</span>'+
-        '</li>'+
-        '<span id="editArea_'+personIndex+'">'+
-        '</span>'+'<a href="javascript:drawFormOfOnePerson('+personIndex+
-            ')">'
-    document.getElementById('person').innerHTML+=template_person 
-    //ボタンにイベントを追加
-  }
-
-//list->drawList
-
-
-
-
-//interaction------starts
-
-
-var interaction_array_aite;
-function addInteractionToAite(aite_uid){
-  
-  //access to users/aite_uid/interaction and get and show into console
-  firebase.firestore().collection('users').doc(aite_uid).get().then((doc)=>{
-    console.log('raw interaction: ',doc.data()['interaction'])
-    console.log('splitted interaction array: ',doc.data()['interaction'].split(','))
-    interaction_array_aite=doc.data()['interaction'].split(',')
-
-    //check if currentUser's uid exists in above array
-    if(interaction_array_aite.indexOf(firebase.auth().currentUser.uid) >= 0){
-      console.log('sccessfully detected interaction duplicate  detail:aite')
-      window.location.href=`chat.html?chatroom=${generateChatroomID(getGroupIDFromUrlParameterOrRandomID(),firebase.auth().currentUser.uid)}`
-
-    }else {
-      //not dup
-      //adding currentUser's uid to aite
-      firebase.firestore().collection('users').doc(aite_uid).set({interaction:`${doc.data()['interaction']},${firebase.auth().currentUser.uid}`},{merge:true}).then(()=>{
-          window.location.href=`chat.html?chatroom=${generateChatroomID(getGroupIDFromUrlParameterOrRandomID(),firebase.auth().currentUser.uid)}`
-      })
-
-    }
-  })
-}
-
-
-    //add interaction to jibun same.
-var interaction_array_jibun;
-function addInteractionToJibun(aite_uid){
-  
-  //access to users/[jibun]/interaction and get and show into console
-  firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc)=>{
-    console.log('raw interaction: ',doc.data()['interaction'])
-    console.log('splitted interaction array: ',doc.data()['interaction'].split(','))
-    interaction_array_jibun=doc.data()['interaction'].split(',')
-    //check if aite_uid exists in above array
-    if(interaction_array_jibun.indexOf(aite_uid) >= 0){
-      console.log('sccessfully detected interaction duplicate   detail:jibun')
-      window.location.href=`chat.html?chatroom=${generateChatroomID(getGroupIDFromUrlParameterOrRandomID(),firebase.auth().currentUser.uid)}`
-
-    }else {
-      //not dup
-      //adding aite_uid to jibun interaction
-      firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({interaction:`${doc.data()['interaction']},${aite_uid}`},{merge:true}).then(()=>{
-        addInteractionToAite(aite_uid)
-      })
-
-    }
-
-  })
-}
-
-//interaction------end
-
-
-//test 
-var db=firebase.firestore()
-var users_documentID_array=[];
-var randomly_selected_documentID
-var currentUser
-
-function checkDocumentIDIsNotTheSameAsUid(){  
-  getRandomDocumentID(()=>{
-    console.log(randomly_selected_documentID,'/',currentUser)
-    console.log(randomly_selected_documentID==currentUser)
-  },()=>{
-    if(randomly_selected_documentID!=currentUser){
-      console.log(`success:${randomly_selected_documentID}`)
-      //ランダムに選べた後の処理・・・・ここ
-      draw_group_callback()
-
-    }else{
-      window.location.reload()
-    }
-  })
-
-}
-
-function getRandomDocumentID(callback,success_random_select){
-  currentUser=firebase.auth().currentUser.uid
-
-  users_documentID_array=[]
-  db.collection("users").get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          //console.log(doc.id);
-          users_documentID_array.push(doc.id)
-      })
-  }).then(()=>{
-    //console.log(users_documentID_array)
-    randomly_selected_documentID=users_documentID_array[Math.floor(Math.random() * users_documentID_array.length)]
-    console.log('randomly selected documentID:',randomly_selected_documentID)
-    callback()
-    success_random_select()
-  })
-}
-
-function authStateObserver(user){
-  if(user){
-    checkDocumentIDIsNotTheSameAsUid()
-  }else{
-    console.log('login status: out')
-    alert('ログインしていません')
-    window.location.href = 'index.html'
-  }
-} 
-
-
-function getGroupIDFromUrlParameterOrRandomID(){
-  if(urlParameter.groupID){return urlParameter.groupID}else{return randomly_selected_documentID}
-}
-
-function draw_group_callback(){
-  firebase.firestore().collection('users').doc(getGroupIDFromUrlParameterOrRandomID()).get().then((doc)=>{
-
-
-
-    //SOLVED:2020/02/13 potential error: if groupid doesnt exist in user firestore storage, then error can happen here.
-    //NOW when this happens, the page will reload itself
-    if(doc.data()['groupID']){
-      groupID=doc.data()['groupID'][0]
-    }else{
-      window.location.reload()
-    }
-    //document.getElementById('editGroup_0').onclick=()=>{window.location.href=`editGroupProfile.html?groupID=${groupID}`}
-
-    console.log(`groupID[0]=${groupID}`)
-    firebase.firestore().collection('groups').doc(groupID).get().then((doc_group)=>{
-      console.log(doc_group.data())
-      var groupName=doc_group.data()['groupName']
-      console.log(groupName)
-      var groupDescription=doc_group.data()['groupDescription']
-      console.log(groupDescription)
-      var avatarImage=doc_group.data()['avatarImage']
-      console.log(avatarImage)
-      addGroupOverviewToCard(groupName,groupDescription,avatarImage,groupID)
-
-
-      //group profile details
-      addGroupDetailToCard(avatarImage)
-      updateList(groupID)
-      //loading progressbar disabled
-      document.getElementById('progressbar').style.visibility='hidden'
-
-      document.getElementById('send_message_button').onclick=()=>{
-        //edit
-        
-        //initialize interactions this triggers double check and regardless of the
-        //check results, it will lead user to chat.html?group......
-        addInteractionToJibun(randomly_selected_documentID)
-
-
-      }
-      
-
-    })
-  })
-}
- 
-
-
-</script>
-
-                  
 
+            function addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID) {
+              document.getElementById('group_overview').innerHTML = `  <div class="mdl-card__title mdl-card--expand">` +
+                `<h2 class="mdl-card__title-text">` + groupName + `</h2>` +
+                `</div>` +
+                `<div class="mdl-card__supporting-text">` + groupDescription +
+                `</div>` +
+                `<div class="mdl-card__actions mdl-card--border">` +
+                `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id='send_message_button'>` +
+                `チャット` +
+                `</a>` +
+                `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='javascript:window.location.href="match.html";'>` +
+                `再トライ` +
+                `</a>` +
+                `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='javascript:window.location.href="dashboard.html";'>` +
+                `終了` +
+                `</a>` +
+                `</div>`
+              //document.querySelector("#group_overview > div.mdl-card__title").style.backgroundImage =`url("${avatarImage}") bottom right 0%`;
+
+            }
+
+            //edit
+            // forked from editGroupProfile.html
+            function updateList(groupID) {
+              db.collection('groups').doc(groupID).get().then((doc) => {
+                //console.log(doc.data()['profiles']['length'])
+                try {
+                  length_of_profiles = Object.keys(doc.data()['profiles']).length
+                } catch (error) { }
+                for (var i = 0; i < length_of_profiles; i++) {
+                  ((callback) => {
+                    drawListOfOnePerson(i, doc.data()['profiles'][i]['name'], doc.data()['profiles'][i]['description'])
+                  })()
+                }
+              })
+            }
+
+
+
+
+            function generateChatroomID(group_a, group_b) {
+              groups = [group_a, group_b]
+              //console.log(groups)
+              groups.sort()
+              //console.log(groups)
+              return `${groups[0]}_${groups[1]}`
+            }
+
+
+
+            //edit
+            function addGroupDetailToCard(avatarImage) {
+              //document.getElementById('group_detail').innerText=avatarImage
+
+              var image_title_obj = document.createElement('h5')
+              image_title_obj.innerText = 'グループプロフィール画像'
+              document.getElementById('group_detail').appendChild(image_title_obj)
+
+              var avatarImage_obj = document.createElement('img')
+              avatarImage_obj.src = avatarImage
+              document.getElementById('group_detail').appendChild(avatarImage_obj)
+              avatarImage_obj.style.width = '100%'
+
+              var groupmember_title_obj = document.createElement('h5')
+              groupmember_title_obj.innerText = 'メンバーの一覧'
+              document.getElementById('group_detail').appendChild(groupmember_title_obj)
+
+            }
+
+
+
+
+
+            //draw lists of people (it doesnt create forms for miodifying each attribute) //afternoon
+            function drawListOfOnePerson(personIndex, name, description) {
+              var template_person = '<ul class="demo-list-three mdl-list">' +
+                '<li class="mdl-list__item mdl-list__item--three-line">' +
+                '<span class="mdl-list__item-primary-content">' +
+                '<i class="material-icons mdl-list__item-avatar">person</i>' +
+                '<span id="editArea_name_' + personIndex + '">' + name + '</span>' +
+                '<span class="mdl-list__item-text-body" id="editArea_description_' + personIndex + '">' + description +
+                '</span>' +
+                '</span>' +
+                '</li>' +
+                '<span id="editArea_' + personIndex + '">' +
+                '</span>' + '<a href="javascript:drawFormOfOnePerson(' + personIndex +
+                ')">'
+              document.getElementById('person').innerHTML += template_person
+              //ボタンにイベントを追加
+            }
+
+            //list->drawList
+
+
+
+
+            //interaction------starts
+
+
+            var interaction_array_aite;
+            function addInteractionToAite(aite_uid) {
+
+              //access to users/aite_uid/interaction and get and show into console
+              firebase.firestore().collection('users').doc(aite_uid).get().then((doc) => {
+                console.log('raw interaction: ', doc.data()['interaction'])
+                console.log('splitted interaction array: ', doc.data()['interaction'].split(','))
+                interaction_array_aite = doc.data()['interaction'].split(',')
+
+                //check if currentUser's uid exists in above array
+                if (interaction_array_aite.indexOf(firebase.auth().currentUser.uid) >= 0) {
+                  console.log('sccessfully detected interaction duplicate  detail:aite')
+                  window.location.href = `chat.html?chatroom=${generateChatroomID(getGroupIDFromUrlParameterOrRandomID(), firebase.auth().currentUser.uid)}`
+
+                } else {
+                  //not dup
+                  //adding currentUser's uid to aite
+                  firebase.firestore().collection('users').doc(aite_uid).set({ interaction: `${doc.data()['interaction']},${firebase.auth().currentUser.uid}` }, { merge: true }).then(() => {
+                    window.location.href = `chat.html?chatroom=${generateChatroomID(getGroupIDFromUrlParameterOrRandomID(), firebase.auth().currentUser.uid)}`
+                  })
+
+                }
+              })
+            }
+
+
+            //add interaction to jibun same.
+            var interaction_array_jibun;
+            function addInteractionToJibun(aite_uid) {
+
+              //access to users/[jibun]/interaction and get and show into console
+              firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
+                console.log('raw interaction: ', doc.data()['interaction'])
+                console.log('splitted interaction array: ', doc.data()['interaction'].split(','))
+                interaction_array_jibun = doc.data()['interaction'].split(',')
+                //check if aite_uid exists in above array
+                if (interaction_array_jibun.indexOf(aite_uid) >= 0) {
+                  console.log('sccessfully detected interaction duplicate   detail:jibun')
+                  window.location.href = `chat.html?chatroom=${generateChatroomID(getGroupIDFromUrlParameterOrRandomID(), firebase.auth().currentUser.uid)}`
+
+                } else {
+                  //not dup
+                  //adding aite_uid to jibun interaction
+                  firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({ interaction: `${doc.data()['interaction']},${aite_uid}` }, { merge: true }).then(() => {
+                    addInteractionToAite(aite_uid)
+                  })
+
+                }
+
+              })
+            }
+
+            //interaction------end
+
+
+            //test 
+            var db = firebase.firestore()
+            var users_documentID_array = [];
+            var randomly_selected_documentID
+            var currentUser
+
+            function checkDocumentIDIsNotTheSameAsUid() {
+              getRandomDocumentID(() => {
+                console.log(randomly_selected_documentID, '/', currentUser)
+                console.log(randomly_selected_documentID == currentUser)
+              }, () => {
+                if (randomly_selected_documentID != currentUser) {
+                  console.log(`success:${randomly_selected_documentID}`)
+                  //ランダムに選べた後の処理・・・・ここ
+                  draw_group_callback()
+
+                } else {
+                  window.location.reload()
+                }
+              })
+
+            }
+
+            function getRandomDocumentID(callback, success_random_select) {
+              currentUser = firebase.auth().currentUser.uid
+
+              users_documentID_array = []
+              db.collection("users").get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  // doc.data() is never undefined for query doc snapshots
+                  //console.log(doc.id);
+                  users_documentID_array.push(doc.id)
+                })
+              }).then(() => {
+                //console.log(users_documentID_array)
+                randomly_selected_documentID = users_documentID_array[Math.floor(Math.random() * users_documentID_array.length)]
+                console.log('randomly selected documentID:', randomly_selected_documentID)
+                callback()
+                success_random_select()
+              })
+            }
+
+            function authStateObserver(user) {
+              if (user) {
+                checkDocumentIDIsNotTheSameAsUid()
+              } else {
+                console.log('login status: out')
+                alert('ログインしていません')
+                window.location.href = 'index.html'
+              }
+            }
+
+
+            function getGroupIDFromUrlParameterOrRandomID() {
+              if (urlParameter.groupID) { return urlParameter.groupID } else { return randomly_selected_documentID }
+            }
+
+            function draw_group_callback() {
+              firebase.firestore().collection('users').doc(getGroupIDFromUrlParameterOrRandomID()).get().then((doc) => {
+
+
+
+                //SOLVED:2020/02/13 potential error: if groupid doesnt exist in user firestore storage, then error can happen here.
+                //NOW when this happens, the page will reload itself
+                if (doc.data()['groupID']) {
+                  groupID = doc.data()['groupID'][0]
+                } else {
+                  window.location.reload()
+                }
+                //document.getElementById('editGroup_0').onclick=()=>{window.location.href=`editGroupProfile.html?groupID=${groupID}`}
+
+                console.log(`groupID[0]=${groupID}`)
+                firebase.firestore().collection('groups').doc(groupID).get().then((doc_group) => {
+                  console.log(doc_group.data())
+                  var groupName = doc_group.data()['groupName']
+                  console.log(groupName)
+                  var groupDescription = doc_group.data()['groupDescription']
+                  console.log(groupDescription)
+                  var avatarImage = doc_group.data()['avatarImage']
+                  console.log(avatarImage)
+                  addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID)
+
+
+                  //group profile details
+                  addGroupDetailToCard(avatarImage)
+                  updateList(groupID)
+                  //loading progressbar disabled
+                  document.getElementById('progressbar').style.visibility = 'hidden'
+
+                  document.getElementById('send_message_button').onclick = () => {
+                    //edit
+
+                    //initialize interactions this triggers double check and regardless of the
+                    //check results, it will lead user to chat.html?group......
+                    addInteractionToJibun(randomly_selected_documentID)
+
+
+                  }
+
+
+                })
+              })
+            }
+
+
+
+          </script>
+
+
+
+        </div>
       </div>
+
     </main>
   </div>
 
-<script type="text/javascript" src="sidebar_nav.js"></script>
+  <script type="text/javascript" src="sidebar_nav.js"></script>
 
 
- </body>
+</body>
+
 </html>

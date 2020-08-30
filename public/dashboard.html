@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
@@ -15,7 +16,9 @@
   <script src="/__/firebase/6.6.1/firebase-storage.js"></script>
   <script src="/__/firebase/init.js"></script>
 </head>
+
 <body>
+
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
@@ -24,269 +27,286 @@
       </div>
     </header>
     <div class="mdl-layout__drawer" id='sidebar'> <span class="mdl-layout-title">メニュー</span>
-      <nav class="mdl-navigation" id='sidebar_nav'>  </nav>
+      <nav class="mdl-navigation" id='sidebar_nav'> </nav>
     </div>
+
     <main class="mdl-layout__content">
       <!--ローディング-->
       <div id="progressbar" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
       <!--コンテンツ-->
       <div class="page-content">
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-<!-- Square card -->
-<style>
-.demo-card-square.mdl-card {
-  width: 320px;
-  height: 250px;
-}
-.demo-card-square > .mdl-card__title {
-  color: #fff;
-  background:
-    url() bottom right 15% no-repeat #46B6AC;
-}
-</style>
 
-<h5>あなたのグループ</h5>
-<div class="demo-card-square mdl-card mdl-shadow--2dp" id='group_0'>
-</div>
+
+          <h5>あなたのグループ</h5>
+          <div class="demo-card-square mdl-card mdl-shadow--2dp" id='group_0'>
+          </div>
 
 
 
 
         </div>
-    <!-- Colored FAB button with ripple -->
+        <!-- Colored FAB button with ripple -->
 
 
-<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid"><h5>最近の交流</h5>
-<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">ヒント:右のアイコンタップでチャット再開<br>誰かがあなたにチャットした時はここにそのグループが表示されます。目新しいグループを見つけたら、チャット画面を開いて確認してみましょう！
-
-<!-- List items with avatar and action -->
-<style>
-.demo-list-action {
-  width: 300px;
-}
-</style>
-
-<span id='group_list'></span>
+        <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+          <h5>最近の交流</h5>
+          <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+            ヒント:右のアイコンタップでチャット再開<br>誰かがあなたにチャットした時はここにそのグループが表示されます。目新しいグループを見つけたら、チャット画面を開いて確認してみましょう！
+            <span id='group_list'></span>
 
 
 
-</div>
+          </div>
 
-</div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
 
 
 
-
-<script type="text/javascript">
+  <script type="text/javascript">
 
 
 
 
 
-/*
+    /*
+    
+    
+    */
+    function generateChatroomID(group_a, group_b) {
+      var groups = [group_a, group_b]
+      //console.log(groups)
+      groups.sort()
+      //console.log(groups)
+      return `${groups[0]}_${groups[1]}`
+    }
 
 
-*/
-function generateChatroomID(group_a,group_b){
-  var groups=[group_a,group_b]
-  //console.log(groups)
-  groups.sort()
-  //console.log(groups)
-  return `${groups[0]}_${groups[1]}`
-}
+    //interaction
+    var interaction_array_jibun;
+    function getInteractionJibun() {
+
+      //access to users/[jibun]/interaction and get and show into console
+      firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
+        console.log('raw interaction: ', doc.data()['interaction'])
+        console.log('splitted interaction array: ', doc.data()['interaction'].split(','))
+        interaction_array_jibun = doc.data()['interaction'].split(',')
+        //addGroupTolist()をループで適用
+        for (var i = 0; i < interaction_array_jibun.length; i++) {
+          addGroupTolist(interaction_array_jibun[i])
+        }
+
+      }).then(() => {
+        for (var i = 0; i < interaction_array_jibun.length; i++) {
+          initializeList(interaction_array_jibun[i])
+        }
+      })
+    }
 
 
-//interaction
-var interaction_array_jibun;
-function getInteractionJibun(){
 
-  //access to users/[jibun]/interaction and get and show into console
-  firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc)=>{
-    console.log('raw interaction: ',doc.data()['interaction'])
-    console.log('splitted interaction array: ',doc.data()['interaction'].split(','))
-    interaction_array_jibun=doc.data()['interaction'].split(',')
-    //addGroupTolist()をループで適用
-      for(var i=0;i<interaction_array_jibun.length;i++){
-        addGroupTolist(interaction_array_jibun[i])
+    function addGroupTolist(uid) {
+
+
+      document.getElementById('group_list').innerHTML += '<div class="demo-list-action mdl-list">' +
+        '<div class="mdl-list__item" id="' + uid + '">' +
+        '<span class="mdl-list__item-primary-content">' +
+        '<i class="material-icons mdl-list__item-avatar">people</i>' +
+        '<span id="' + uid + '_summary">読み込み中</span>' +
+        '</span>' +
+        '<a class="mdl-list__item-secondary-action" id="' + uid + '_send">' + '<i class="material-icons">send</i>' + '</a>' +
+        '</div>' +
+        '</div>'
+
+      //initializeList(interaction_array_jibun[i])
+
+    }
+
+
+
+
+    function initializeList(uid) {
+      var urltochatroom = `chat.html?chatroom=${generateChatroomID(uid, firebase.auth().currentUser.uid)}`
+
+      //send
+      document.getElementById(`${uid}_send`).onclick = () => { window.location.href = urltochatroom }
+
+      //text
+      firebase.firestore().collection('users').doc(uid).get().then((doc) => {
+
+        var groupID = doc.data()['groupID'][0]
+        //getting groupinfo based on the above groupID
+        firebase.firestore().collection('groups').doc(groupID).get().then((groupRef) => {
+          document.getElementById(`${uid}_summary`).innerHTML = groupRef.data()['groupName']
+        })
+
+      })
+      //document.getElementById(uid).innerHTML
+
+    }
+
+
+
+
+
+
+    var user = firebase.auth().currentUser
+    firebase.auth().onAuthStateChanged(authStateObserver)
+
+    var groupID
+    function authStateObserver(user) {
+      if (user) {
+        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
+          groupID = doc.data()['groupID'][0]
+          //document.getElementById('editGroup_0').onclick=()=>{window.location.href=`editGroupProfile.html?groupID=${groupID}`}
+
+          console.log(`groupID[0]=${groupID}`)
+          firebase.firestore().collection('groups').doc(groupID).get().then((doc_group) => {
+            //console.log(doc_group.data())
+            var groupName = doc_group.data()['groupName']
+            //console.log(groupName)
+            var groupDescription = doc_group.data()['groupDescription']
+            //console.log(groupDescription)
+            var avatarImage = doc_group.data()['avatarImage']
+            //console.log(avatarImage)
+            addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID)
+            //loading progressbar disabled
+            document.getElementById('progressbar').style.visibility = 'hidden'
+            getInteractionJibun()
+
+          })
+        })
+      } else {
+        console.log('login status: out')
+        alert('ログインしていません')
+        window.location.href = 'index.html'
       }
 
-  }).then(()=>{
-    for(var i=0;i<interaction_array_jibun.length;i++){
-      initializeList(interaction_array_jibun[i])
+
     }
-  })
-}
+
+    function addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID) {
+      document.getElementById('group_0').innerHTML += `  <div class="mdl-card__title mdl-card--expand">` +
+        `<h2 class="mdl-card__title-text">` + groupName + `</h2>` +
+        `</div>` +
+        `<div class="mdl-card__supporting-text">` + groupDescription +
+        `</div>` +
+        `<div class="mdl-card__actions mdl-card--border">` +
+        `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='editGroupProfile.html?groupID=${groupID}'>` +
+        `グループを編集` +
+        `</a>` +
+        `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='match.html'>` +
+        `グループマッチ` +
+        `</a>` +
+        `</div>`
+      document.querySelector("#group_0 > div.mdl-card__title").style.backgroundImage = `url("${avatarImage}") bottom right 0%`;
+    }
+
+
+    var db = firebase.firestore()
+    var users_documentID_array = [];
+    var currentUser
+
+
+    var chatroom_documentID_array = []
+    var chatroom_documentID_array_withUserUid = []
 
 
 
-function addGroupTolist(uid){
-
-
-  document.getElementById('group_list').innerHTML+='<div class="demo-list-action mdl-list">'+
-  '<div class="mdl-list__item" id="'+uid+'">'+
-    '<span class="mdl-list__item-primary-content">'+
-      '<i class="material-icons mdl-list__item-avatar">people</i>'+
-      '<span id="'+uid+'_summary">読み込み中</span>'+
-    '</span>'+
-    '<a class="mdl-list__item-secondary-action" id="'+uid+'_send">'+'<i class="material-icons">send</i>'+'</a>'+
-  '</div>'+
-'</div>'
-
-        //initializeList(interaction_array_jibun[i])
-
-}
-
-
-
-
-function initializeList(uid){
-  var urltochatroom=`chat.html?chatroom=${generateChatroomID(uid,firebase.auth().currentUser.uid)}`
-
-  //send
-  document.getElementById(`${uid}_send`).onclick=()=>{window.location.href=urltochatroom}
-
-  //text
-  firebase.firestore().collection('users').doc(uid).get().then((doc)=>{
+    /*
     
-    var groupID=doc.data()['groupID'][0]
-    //getting groupinfo based on the above groupID
-    firebase.firestore().collection('groups').doc(groupID).get().then((groupRef)=>{
-      document.getElementById(`${uid}_summary`).innerHTML=groupRef.data()['groupName']
-    })
-     
-  })
-  //document.getElementById(uid).innerHTML
-
-}
-
-
-
-
-
-
-var user=firebase.auth().currentUser
-firebase.auth().onAuthStateChanged(authStateObserver)
-
-var groupID
-function authStateObserver(user){
-  if(user){
-    firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc)=>{
-      groupID=doc.data()['groupID'][0]
-      //document.getElementById('editGroup_0').onclick=()=>{window.location.href=`editGroupProfile.html?groupID=${groupID}`}
-
-      console.log(`groupID[0]=${groupID}`)
-      firebase.firestore().collection('groups').doc(groupID).get().then((doc_group)=>{
-        //console.log(doc_group.data())
-        var groupName=doc_group.data()['groupName']
-        //console.log(groupName)
-        var groupDescription=doc_group.data()['groupDescription']
-        //console.log(groupDescription)
-        var avatarImage=doc_group.data()['avatarImage']
-        //console.log(avatarImage)
-        addGroupOverviewToCard(groupName,groupDescription,avatarImage,groupID)
-        //loading progressbar disabled
-        document.getElementById('progressbar').style.visibility='hidden'
-        getInteractionJibun()
-
+    IS PATH CORRECT? 'chatrooms'
+    DOES F1 WORK?
+    FOR EACHでdoc.idのように使えるのか？
+    似たやつを利用　match.html
+    d
+    
+      db.collection("users").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+              // doc.data() is never undefined for query doc snapshots
+              //console.log(doc.id);
+              users_documentID_array.push(doc.id)
+          })
       })
-    })
-  } else {
-    console.log('login status: out')
-    alert('ログインしていません')
-    window.location.href = 'index.html'
-  }
+    
+    
+    
+    
+    */
 
-
-} 
-
-function addGroupOverviewToCard(groupName,groupDescription,avatarImage,groupID){
-  document.getElementById('group_0').innerHTML+=`  <div class="mdl-card__title mdl-card--expand">`+
-      `<h2 class="mdl-card__title-text">`+groupName+`</h2>`+
-    `</div>`+
-    `<div class="mdl-card__supporting-text">`+groupDescription+
-    `</div>`+
-    `<div class="mdl-card__actions mdl-card--border">`+
-      `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='editGroupProfile.html?groupID=${groupID}'>`+
-         `グループを編集`+
-      `</a>`+
-      `<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href='match.html'>`+
-         `グループマッチ`+
-      `</a>`+
-    `</div>`
-  document.querySelector("#group_0 > div.mdl-card__title").style.backgroundImage =`url("${avatarImage}") bottom right 0%`;
-}
-
-
-var db=firebase.firestore()
-var users_documentID_array=[];
-var currentUser
-
-
-var chatroom_documentID_array=[]
-var chatroom_documentID_array_withUserUid=[]
-
-
-
-/*
-
-IS PATH CORRECT? 'chatrooms'
-DOES F1 WORK?
-FOR EACHでdoc.idのように使えるのか？
-似たやつを利用　match.html
-d
-
-  db.collection("users").get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          //console.log(doc.id);
-          users_documentID_array.push(doc.id)
-      })
-  })
-
-
-
-
-*/
-
-function getDocumentIDOfRecentChatroom(){
-  //creates document id list
-  var name=firebase.auth().currentUser.uid
-  db.collection("chatrooms").orderBy('name').startAt(name).endAt(name+'\uf8ff').get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-      //f1
+    function getDocumentIDOfRecentChatroom() {
+      //creates document id list
+      var name = firebase.auth().currentUser.uid
+      db.collection("chatrooms").orderBy('name').startAt(name).endAt(name + '\uf8ff').get().then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          //f1
           console.log('hey')
           chatroom_documentID_array.push(doc.id)
           console.log(doc.id)
+        })
+      }).catch((error) => { console.log(error) }).then(() => {
+        //search document id(s) that have user's uid
+        //using for loop or forEach
+        //for(var i=0;i<chatroom_documentID_array.length;i++){
+        //  addOnlyDocumentIDWithUsersUid(chatroom_documentID_array[i])
+        //}
+
       })
-  }).catch((error)=>{console.log(error)}).then(()=>{
-    //search document id(s) that have user's uid
-    //using for loop or forEach
-   //for(var i=0;i<chatroom_documentID_array.length;i++){
-   //  addOnlyDocumentIDWithUsersUid(chatroom_documentID_array[i])
-   //}
-
-  })
-}
+    }
 
 
 
 
-function addOnlyDocumentIDWithUsersUid(documentID){
-  var uid_0=documentID.slice(28+1)
-  var uid_1=documentID.chatroom.slice(0,28)
-  if(uid_0==firebase.auth().currentUser.uid){
-    chatroom_documentID_array_withUserUid.push(uid_1)
-  }else if(uid_1==firebase.auth().currentUser.uid){
-    chatroom_documentID_array_withUserUid.push(uid_0)
-  }else{}
-}
+    function addOnlyDocumentIDWithUsersUid(documentID) {
+      var uid_0 = documentID.slice(28 + 1)
+      var uid_1 = documentID.chatroom.slice(0, 28)
+      if (uid_0 == firebase.auth().currentUser.uid) {
+        chatroom_documentID_array_withUserUid.push(uid_1)
+      } else if (uid_1 == firebase.auth().currentUser.uid) {
+        chatroom_documentID_array_withUserUid.push(uid_0)
+      } else { }
+    }
 
 
 
 
-</script>
+  </script>
 
-<script type="text/javascript" src="sidebar_nav.js"></script>
-          <br>
-          </body>
+  <script type="text/javascript" src="sidebar_nav.js"></script>
+  <br>
+</body>
+
+<style>
+  .demo-card-square.mdl-card {
+    width: 320px;
+    height: 250px;
+  }
+
+  .demo-card-square .mdl-card__title {
+    color: #fff;
+    background:
+      url() bottom right 15% no-repeat #46B6AC;
+  }
+
+  .demo-list-action {
+    width: 300px;
+  }
+
+  @media screen and (min-width:480px) {
+
+    /*pc or tablet*/
+    .mdl-layout__content {
+      width: 360px;
+      height: 500px;
+      margin: 0 auto;
+    }
+  }
+</style>
+
+
 </html>
