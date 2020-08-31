@@ -268,18 +268,15 @@
       });
     }
 
-    //gettingg profile pic url and replacing placeholder
+    //fetches profile pic url and replacs placeholder
     function updatePlaceholder() {
-
       firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then((doc) => {
         document.getElementById("placeholder").src = doc.data().profilePicURL || "person_placeholder.png"
       })
     }
 
-
-
     function isProfileValid() {
-      // Get the snackbar DIV
+      //all requirements should be met to exceed
       var requirements = [false, false, false];
 
       var i;
@@ -288,11 +285,9 @@
         if (values == "") {
           showToastbar("空白の入力欄があります")
         } else {
-
           if (i == 0) {
             //name
             requirements[0] = true;
-
           } else if (i == 1) {
             //nickname
             requirements[i] = true
@@ -302,12 +297,9 @@
               requirements[i] = true
             } else {
               showToastbar("メールアドレスが有効ではありません")
-
             }
-
           }
         }
-
       }
 
       if (requirements[0] && requirements[1] && requirements[2]) {
@@ -316,11 +308,6 @@
 
     }
 
-
-
-
-
-      //todo html書き換え
   </script>
   <script type="text/javascript" src="sidebar_nav.js"></script>
 
