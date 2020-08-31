@@ -34,10 +34,7 @@
     <main class="mdl-layout__content">
       <!--ローディング-->
       <div id="progressbar" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-      <!--
-            after loaded the page, make #p2 's visibility "hidden"
-            
-            -->
+
       <!--コンテンツ-->
       <div class="page-content">
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
@@ -47,13 +44,16 @@
         </div>
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
           <!--テキストボックス-->
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> 氏名<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、安全のため氏名は入力せず、代わりに好きなポケモンのキャラクタを入力するようにお願いします</b><input
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            氏名<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、安全のため氏名は入力せず、代わりに好きなポケモンのキャラクタを入力するようにお願いします</b><input
               class="mdl-textfield__input" type="text" id="input_0"> <label class="mdl-textfield__label"
               for="input_0"></label> </div><br>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> ニックネーム<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、個人特定が可能なニックネームはお控えください</b><input
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            ニックネーム<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、個人特定が可能なニックネームはお控えください</b><input
               class="mdl-textfield__input" type="text" id="input_1"> <label class="mdl-textfield__label"
               for="input_2"></label> </div><br>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"> メールアドレス<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、実際は安全のためexample@example.comに強制的にセットされます</b><input
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            メールアドレス<br><b>注意：本作品はポートフォリオなのでセキュリティ対策が完全ではないので、実際は安全のためexample@example.comに強制的にセットされます</b><input
               class="mdl-textfield__input" type="text" id="input_2"> <label class="mdl-textfield__label"
               for="input_3"></label> </div><br>
 
@@ -96,15 +96,15 @@
     }
   </style>
   <script type="text/javascript">
-    //snackbar
-    var snackbarContainer = document.querySelector('#demo-toast-example');
-    function toastbar(text) {
-      snackbarContainer.MaterialSnackbar.showSnackbar({
+    //toastbar settings
+    var toastbarContainer = document.querySelector('#demo-toast-example');
+    function showToastbar(text) {
+      toastbarContainer.MaterialSnackbar.showSnackbar({
         message: text
       })
     }
 
-    //*****URL**PARAMETERS*******//
+    //URL parameter settings
     var urlParameter = new Object;
     var pair = location.search.substring(1).split('&');
     for (var i = 0; pair[i]; i++) {
@@ -113,9 +113,8 @@
     }
 
     //disable navigation button if an user is at initial setting
-    //?status=initial_setting
+    //more specifically, if url contains ?status=initial_setting
     if (urlParameter.status == 'initial_setting') {
-      //dont forget include & if you have multiple parameters
       //非同期処理関連　苦肉の策
       setTimeout(() => {
         var button_elm = document.querySelector("body > div > div > header > div.mdl-layout__drawer-button")
@@ -126,23 +125,12 @@
 
     }
 
-    //***********************
-
 
 
     // Shortcuts to DOM Elements.
-    //var messageListElement = document.getElementById('messages');
-    //var messageFormElement = document.getElementById('message-form');
-    //var messageInputElement = document.getElementById('message');
-    //var submitButtonElement = document.getElementById('submit');
     var imageButtonElement = document.getElementById('submitImage');
     var imageFormElement = document.getElementById('image-form');
     var mediaCaptureElement = document.getElementById('mediaCapture');
-    //var userPicElement = document.getElementById('user-pic');
-    //var userNameElement = document.getElementById('user-name');
-    //var signInButtonElement = document.getElementById('sign-in');
-    //var signOutButtonElement = document.getElementById('sign-out');
-    //var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 
 
     var currentUserObject;
@@ -178,7 +166,7 @@
         console.log('login status: in')
         //updating forms here!
         updatingForms()
-        toastbar("幹事プロフィールを充実させましょう！")
+        showToastbar("幹事プロフィールを充実させましょう！")
 
         //updating placehoulder here
         updatePlaceholder()
@@ -193,10 +181,6 @@
       }
     }
 
-
-    //---integrating from toast.html
-    //------integrating from toastbar.html--------
-    //-------------------
     //mail check function
     //-------------------
     function MailCheck(mail) {
@@ -225,13 +209,6 @@
     }
 
 
-
-
-    //DOM shorcuts
-    //toastbar reference
-    //https://www.w3schools.com/howto/howto_js_snackbar.asp
-
-
     function updatingForms() {
       firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then((doc) => {
 
@@ -258,9 +235,9 @@
 
           name: document.getElementById("input_0").value,
           nickname: document.getElementById("input_1").value,
-          mail:'example@example.com'
+          mail: 'example@example.com'
         }, { merge: true }).then(() => {
-          toastbar("幹事プロフィールが正常に保存されました")
+          showToastbar("幹事プロフィールが正常に保存されました")
           loadfinish();
           updatingForms()
           document.getElementById('complete_button').style.visibility = 'visible'
@@ -281,7 +258,7 @@
 
       // Check if the file is an image.
       if (!file.type.match('image.*')) {
-        toastbar("ファイルの形式が画像ではありません")
+        showToastbar("ファイルの形式が画像ではありません")
         return;
       }
       // Check if the user is signed-in
@@ -299,7 +276,7 @@
 
 
     function uploadProfilePicture(file_arg) {
-      toastbar("画像をアップロードしています")
+      showToastbar("画像をアップロードしています")
       loadstart()
       //uploading 
       //changing placehoulder in DOM elements temporalily
@@ -317,7 +294,7 @@
           firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
             profilePicURL: url
           }, { merge: true }).then(() => updatePlaceholder())
-          toastbar("画像が正常にアップロードされました")
+          showToastbar("画像が正常にアップロードされました")
           loadfinish()
         });
       });
@@ -346,12 +323,12 @@
       document.getElementById('placeholder').style.objectFit='cover'
     
       if(height>width){
-        toastbar('height outweighs width')
+        showToastbar('height outweighs width')
         document.getElementById('placeholder').style.width=window.innerWidth*0.
         //document.getElementById('placeholder').style.height=window.parent.screen width
         document.getElementById('placeholder').style.height=window.innerWidth
       }else{
-        toastbar('width outweighs height')
+        showToastbar('width outweighs height')
         document.getElementById('placeholder').style.width=window.innerHeight
         document.getElementById('placeholder').style.height=window.innerHeight
       }
@@ -369,7 +346,7 @@
       for (i = 0; i < 3; i++) {
         var values = document.getElementById('input_' + i).value
         if (values == "") {
-          toastbar("空白の入力欄があります")
+          showToastbar("空白の入力欄があります")
         } else {
 
           if (i == 0) {
@@ -384,7 +361,7 @@
             if (MailCheck(values)) {
               requirements[i] = true
             } else {
-              toastbar("メールアドレスが有効ではありません")
+              showToastbar("メールアドレスが有効ではありません")
 
             }
 
