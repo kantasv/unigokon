@@ -23,25 +23,17 @@
   <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
   <script>
     var db = firebase.firestore();
-
-
-
     firebase.auth().onAuthStateChanged(authStateObserver)
-
 
     function authStateObserver(user) {
       if (user) {
         console.log('login status: in')
-
-
-
-        //uid docがないとどれくらい影響を呼ぼすか
-
-        //docを作ればいいのか？
-        //InitUserID function def
+        //userプロフィールのデータベースを初期化する関数
+        //これを実行しなければeditUserProfile.htmlなどでの操作に支障が出ます
         function initUserData() {
-          //groupIDがないときはUserDataInit()で初期設定
-          //w/o initUseData, only group data is stored and group id will not stored in users/uid
+          //interaction に　WHqZV6a0fZeNLORwvG7eHC8iG9A2　
+          //（開発者への連絡用アカウント）　をデフォルトでセットしている仕様にしています
+          //　これはユーザーにバグ報告や要望などをしてもらうためです
           db.collection('users').doc(user.uid).set({
             name: firebase.auth().currentUser.displayName,
             mail: firebase.auth().currentUser.email,
@@ -50,22 +42,27 @@
           }, { merge: true }).then(function () {
             console.log("UserData successfully Initialized");
             console.log('supposed to move to editUserProfile')
+            //パラメータの?status=initial_settingにより、移り先のページで
+            //ハンバーガーメニューが隠されたり、初めての人向けの詳細メッセージが表示されます
+            //登録後の編集画面ではパラメータはなくなります
             window.location.href = 'editUserProfile.html?status=initial_setting'
           }).catch(function (error) {
             console.error("UserData initilization Error: ", error);
           })
         }
 
+        //ユーザープロフィールに関する初期化の必要性を判断する関数です
+        //必要であればinitUserData()をトリガーします
         function checkUserInitState() {
-          //userUidが存在するかどうかを判断基準にする
-          //so you can use it with if statement.
+          //Firestore : users/{userのuid}が存在するかどうかを判断基準にする
           db.collection('users').doc(user.uid).get().then(function (doc) {
             if (doc.exists) {
+              //既に存在している場合はグループプロフィールの初期化の必要性を判断するページに飛びます
               console.log("already Initialized this user", doc.data());
               console.log('supposed to move to initGroupProfile')
               window.location.href = 'initGroupProfile.html'
             } else {
-              // doc.data() will be undefined in this case
+              // note that doc.data() is undefined in this case
               console.log("currentuser needs to be Initialized");
               initUserData()
             }
@@ -73,22 +70,15 @@
             console.log("Error getting document:", error);
           });
         }
-
         checkUserInitState()
-
 
       } else {
         console.log('login status: out')
-        //alert('ログインしていません')
         window.location.href = 'index.html'
       }
     }
-
-
-//todo html書き換え
   </script>
-  <script>
-  </script>
+
 </body>
 
 </html>
