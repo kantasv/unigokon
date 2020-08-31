@@ -115,7 +115,7 @@
     //disable navigation button if an user is at initial setting
     //more specifically, if url contains ?status=initial_setting
     if (urlParameter.status == 'initial_setting') {
-      //非同期処理関連　苦肉の策
+      //show explanation messages for newcomers
       setTimeout(() => {
         var button_elm = document.querySelector("body > div > div > header > div.mdl-layout__drawer-button")
         button_elm.parentNode.removeChild(button_elm)
@@ -125,8 +125,6 @@
 
     }
 
-
-
     // Shortcuts to DOM Elements.
     var imageButtonElement = document.getElementById('submitImage');
     var imageFormElement = document.getElementById('image-form');
@@ -135,28 +133,8 @@
 
     var currentUserObject;
     //updating forms first
-
-    /*
-     **********UNIGOKON SETTING FROM HERE*********
-     */
-
-    //note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
     var db = firebase.firestore();
-    /*デバッグ時に変更が適用されたかどうかを以下でチェック*/
-    //後々実名変更回数制限を設ける
-    //今は実装しない
-    //グループプロファイルのplaceholderつくる
-    //初回ログイン時にphotoURLをplaceholderのURLにする
     var user = firebase.auth().currentUser;
-
-    //これを使わずその都度firebaseオブジェクトから呼び出せば良い
-    /*
-     **********UNIGOKON SETTING END HERE**********
-     */
-
-
-
-
 
     firebase.auth().onAuthStateChanged(authStateObserver)
 
@@ -164,15 +142,12 @@
     function authStateObserver(user) {
       if (user) {
         console.log('login status: in')
-        //updating forms here!
-        updatingForms()
+
+        updateForms()
         showToastbar("幹事プロフィールを充実させましょう！")
 
-        //updating placehoulder here
         updatePlaceholder()
         loadfinish()
-
-
 
       } else {
         console.log('login status: out')
@@ -200,7 +175,7 @@
     //https://kantaro-cgi.com/blog/javascript/javascript_mailaddress_check.html
     //-------------------
 
-    //loading
+    //loading related two functions
     function loadstart() {
       document.getElementById('progressbar').style.visibility = 'visible'
     }
@@ -208,18 +183,15 @@
       document.getElementById('progressbar').style.visibility = 'hidden'
     }
 
-
-    function updatingForms() {
+    //fetches basic user profile data and upadate forms based on the data
+    function updateForms() {
       firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then((doc) => {
-
         document.getElementById("input_0").value = doc.data()["name"] || ""
         document.getElementById("input_1").value = doc.data()["nickname"] || ""
         document.getElementById("input_2").value = doc.data()["mail"] || ""
         console.log(doc.data())
       })
     }
-
-
 
     function saveProfile() {
       if (isProfileValid()) {
@@ -228,34 +200,30 @@
         loadstart()
 
         //firebase-
-        //originally,  document.getElementById("input_2").value
+        //originally,  mail field should be document.getElementById("input_2").value
         //but for security reasons, it sets mail field to 'example@example.com'
+        //ポートフォリオのセキュリティルールでは安全性が必ずしも確保できるとは言えないので
+        //個人情報は入力しないよう注意を促すとともに、メアドはexample@example.comに強制セットする仕様にしました
 
         firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
-
           name: document.getElementById("input_0").value,
           nickname: document.getElementById("input_1").value,
           mail: 'example@example.com'
         }, { merge: true }).then(() => {
           showToastbar("幹事プロフィールが正常に保存されました")
           loadfinish();
-          updatingForms()
+          updateForms()
           document.getElementById('complete_button').style.visibility = 'visible'
-
         })
-        //firebase--
       }
     }
-
 
     // Triggered when a file is selected via the media picker.
     function onMediaFileSelected(event) {
       event.preventDefault();
       var file = event.target.files[0];
-
       // Clear the selection in the file picker input.
       imageFormElement.reset();
-
       // Check if the file is an image.
       if (!file.type.match('image.*')) {
         showToastbar("ファイルの形式が画像ではありません")
@@ -278,19 +246,19 @@
     function uploadProfilePicture(file_arg) {
       showToastbar("画像をアップロードしています")
       loadstart()
-      //uploading 
       //changing placehoulder in DOM elements temporalily
+      //until it succesfully gets image URL from Storage
       document.getElementById("placeholder").src = "loading.jpg"
-      //ここは後で調整　比
+      //currently, images are displayed as 1:1
       document.getElementById("placeholder").style.height = '300px'
       document.getElementById("placeholder").style.width = '300px'
 
-      // 2 - Upload the image to Cloud Storage.
+      // Upload the image to Cloud Storage.
       var filePath = 'users' + firebase.auth().currentUser.uid + '/' + file_arg.name
       return firebase.storage().ref(filePath).put(file_arg).then(function (fileSnapshot) {
-        // 3 - Generate a public URL for the file.
+        //  Generate a public URL for the file.
         return fileSnapshot.ref.getDownloadURL().then((url) => {
-          // 4 - Update the chat message placeholder with the image’s URL.
+          //  Update the chat message placeholder with the image’s URL.
           firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
             profilePicURL: url
           }, { merge: true }).then(() => updatePlaceholder())
@@ -298,13 +266,6 @@
           loadfinish()
         });
       });
-
-
-
-      //updating url in firestoere
-
-      //aftere url refresh, then execute this
-      //updatePlaceholder()
     }
 
     //gettingg profile pic url and replacing placeholder
@@ -314,27 +275,6 @@
         document.getElementById("placeholder").src = doc.data().profilePicURL || "person_placeholder.png"
       })
     }
-
-
-    /*
-    function resizePlaceholder(){
-      var height=document.getElementById('placeholder').naturalHeight
-      var width=document.getElementById('placeholder').naturalWidth
-      document.getElementById('placeholder').style.objectFit='cover'
-    
-      if(height>width){
-        showToastbar('height outweighs width')
-        document.getElementById('placeholder').style.width=window.innerWidth*0.
-        //document.getElementById('placeholder').style.height=window.parent.screen width
-        document.getElementById('placeholder').style.height=window.innerWidth
-      }else{
-        showToastbar('width outweighs height')
-        document.getElementById('placeholder').style.width=window.innerHeight
-        document.getElementById('placeholder').style.height=window.innerHeight
-      }
-      
-    }
-    */
 
 
 
