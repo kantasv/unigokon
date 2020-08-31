@@ -1,4 +1,5 @@
 <html lang="ja">
+
 <head>
   <meta charset="utf-8">
   <title>ユーザーデータ状況確認中</title>
@@ -16,80 +17,72 @@
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
   <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </head>
+
 <body>
   <!-- MDL Progress Bar with Indeterminate Progress -->
   <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
   <script>
-
-//note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
-var db = firebase.firestore();
-/*デバッグ時に変更が適用されたかどうかを以下でチェック*/
-//後々実名変更回数制限を設ける
-//今は実装しない
-//グループプロファイルのplaceholderつくる
-//初回ログイン時にphotoURLをplaceholderのURLにする
-/*
- **********UNIGOKON SETTING END HERE**********
- */
-
-
-firebase.auth().onAuthStateChanged(authStateObserver)
-
-
-function authStateObserver(user) {
-  if (user) {
-    console.log('login status: in')
+    var db = firebase.firestore();
 
 
 
-//uid docがないとどれくらい影響を呼ぼすか
+    firebase.auth().onAuthStateChanged(authStateObserver)
 
-//docを作ればいいのか？
-    //InitUserID function def
-    function initUserData() {
-      //groupIDがないときはUserDataInit()で初期設定
-      //w/o initUseData, only group data is stored and group id will not stored in users/uid
-      db.collection('users').doc(user.uid).set({
-        name: firebase.auth().currentUser.displayName,
-        mail: firebase.auth().currentUser.email,
-        nickname:"",
-        interaction:"WHqZV6a0fZeNLORwvG7eHC8iG9A2"
-      },{merge:true}).then(function () {
-        console.log("UserData successfully Initialized");
-        console.log('supposed to move to editUserProfile')
-        window.location.href='editUserProfile.html?status=initial_setting'
-      }).catch(function (error) {
-        console.error("UserData initilization Error: ", error);
-      })
-    }
 
-    function checkUserInitState() {
-      //userUidが存在するかどうかを判断基準にする
-      //so you can use it with if statement.
-      db.collection('users').doc(user.uid).get().then(function (doc) {
-        if (doc.exists) {
-          console.log("already Initialized this user", doc.data());
-          console.log('supposed to move to initGroupProfile')
-          window.location.href = 'initGroupProfile.html'
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("currentuser needs to be Initialized");
-          initUserData()
+    function authStateObserver(user) {
+      if (user) {
+        console.log('login status: in')
+
+
+
+        //uid docがないとどれくらい影響を呼ぼすか
+
+        //docを作ればいいのか？
+        //InitUserID function def
+        function initUserData() {
+          //groupIDがないときはUserDataInit()で初期設定
+          //w/o initUseData, only group data is stored and group id will not stored in users/uid
+          db.collection('users').doc(user.uid).set({
+            name: firebase.auth().currentUser.displayName,
+            mail: firebase.auth().currentUser.email,
+            nickname: "",
+            interaction: "WHqZV6a0fZeNLORwvG7eHC8iG9A2"
+          }, { merge: true }).then(function () {
+            console.log("UserData successfully Initialized");
+            console.log('supposed to move to editUserProfile')
+            window.location.href = 'editUserProfile.html?status=initial_setting'
+          }).catch(function (error) {
+            console.error("UserData initilization Error: ", error);
+          })
         }
-      }).catch(function (error) {
-        console.log("Error getting document:", error);
-      });
+
+        function checkUserInitState() {
+          //userUidが存在するかどうかを判断基準にする
+          //so you can use it with if statement.
+          db.collection('users').doc(user.uid).get().then(function (doc) {
+            if (doc.exists) {
+              console.log("already Initialized this user", doc.data());
+              console.log('supposed to move to initGroupProfile')
+              window.location.href = 'initGroupProfile.html'
+            } else {
+              // doc.data() will be undefined in this case
+              console.log("currentuser needs to be Initialized");
+              initUserData()
+            }
+          }).catch(function (error) {
+            console.log("Error getting document:", error);
+          });
+        }
+
+        checkUserInitState()
+
+
+      } else {
+        console.log('login status: out')
+        //alert('ログインしていません')
+        window.location.href = 'index.html'
+      }
     }
-
-    checkUserInitState()
-
-
-  } else {
-    console.log('login status: out')
-    //alert('ログインしていません')
-    window.location.href = 'index.html'
-  }
-}
 
 
 //todo html書き換え
@@ -97,4 +90,5 @@ function authStateObserver(user) {
   <script>
   </script>
 </body>
+
 </html>
