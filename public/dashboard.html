@@ -66,7 +66,7 @@
     }
 
     //interaction　「最近の交流」に関わるコード
-    var my_interaction_array;
+    var myInteractions;
     //「最近の交流」に関わるデータをFirestoreから取得する関数
     function getMyInteraction() {
 
@@ -76,16 +76,16 @@
       firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
         console.log('raw interaction: ', doc.data()['interaction'])
         console.log('splitted interaction array: ', doc.data()['interaction'].split(','))
-        my_interaction_array = doc.data()['interaction'].split(',')
-        //配列my_interaction_arrayに基づき、全ての「最近の交流」に含まれるべきグループを
+        myInteractions = doc.data()['interaction'].split(',')
+        //配列myInteractionsに基づき、全ての「最近の交流」に含まれるべきグループを
         //DOMに追加している。user uidに基づいてグループを管理していることに注意。groupIDではない
-        for (var i = 0; i < my_interaction_array.length; i++) {
-          drawEachGroupToList(my_interaction_array[i])
+        for (var i = 0; i < myInteractions.length; i++) {
+          drawEachGroupToList(myInteractions[i])
         }
 
       }).then(() => {
-        for (var i = 0; i < my_interaction_array.length; i++) {
-          initializeFunctionsOfEachGroupList(my_interaction_array[i])
+        for (var i = 0; i < myInteractions.length; i++) {
+          initializeFunctionsOfEachGroupList(myInteractions[i])
         }
       })
     }
@@ -179,9 +179,8 @@
 
     var db = firebase.firestore()
     //各種ユーザー情報とチャットルームID生成に関わる配列準備
-    var users_documentID_array = [];
-    var chatroom_documentID_array = []
-    var chatroom_documentID_array_withUserUid = []
+    var chatroomDocumentIDs = []
+    var chatroomDocumentIDs_withUserUid = []
 
 
     function getDocumentIDOfRecentChatroom() {
@@ -194,7 +193,7 @@
       db.collection("chatrooms").orderBy('name').startAt(name).endAt(name + '\uf8ff').get().then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           console.log('fetched a document ID (chatroom ID) from firestore')
-          chatroom_documentID_array.push(doc.id)
+          chatroomDocumentIDs.push(doc.id)
           console.log(doc.id)
         })
       }).catch((error) => { console.log(error) })
@@ -206,9 +205,9 @@
       var uid_0 = documentID.slice(DOCUMENTID_LENGTH + 1)
       var uid_1 = documentID.chatroom.slice(0, DOCUMENTID_LENGTH)
       if (uid_0 == firebase.auth().currentUser.uid) {
-        chatroom_documentID_array_withUserUid.push(uid_1)
+        chatroomDocumentIDs_withUserUid.push(uid_1)
       } else if (uid_1 == firebase.auth().currentUser.uid) {
-        chatroom_documentID_array_withUserUid.push(uid_0)
+        chatroomDocumentIDs_withUserUid.push(uid_0)
       }
     }
   </script>
