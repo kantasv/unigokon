@@ -22,7 +22,7 @@
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <!-- Title --><span class="mdl-layout-title">ダッシュボード</span>
+        <span class="mdl-layout-title">ダッシュボード</span>
         <div class="mdl-layout-spacer"></div>
       </div>
     </header>
@@ -33,51 +33,30 @@
     <main class="mdl-layout__content">
       <!--ローディング-->
       <div id="progressbar" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-      <!--コンテンツ-->
+
       <div class="page-content">
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-
-
           <h5>あなたのグループ</h5>
           <div class="demo-card-square mdl-card mdl-shadow--2dp" id='group_0'>
           </div>
-
-
-
-
         </div>
-        <!-- Colored FAB button with ripple -->
-
 
         <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
           <h5>最近の交流</h5>
           <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-            ヒント:右のアイコンタップでチャット再開<br>誰かがあなたにチャットした時はここにそのグループが表示されます。目新しいグループを見つけたら、チャット画面を開いて確認してみましょう！
+            ヒント:右のアイコンタップでチャット再開<br>
+            誰かがあなたにチャットした時はここにそのグループが表示されます。目新しいグループを見つけたら、チャット画面を開いて確認してみましょう！
             <span id='group_list'></span>
-
-
-
           </div>
-
         </div>
       </div>
-
     </main>
-
   </div>
-
-
 
   <script type="text/javascript">
 
-
-
-
-
-    /*
-    
-    
-    */
+    //2つのグループIDを辞書順に{groupID_1}_{groupID_2}のように文字列として結合し
+    //chatroomIDを生成します。これは今後のチャットルームの識別用に用いられます
     function generateChatroomID(group_a, group_b) {
       var groups = [group_a, group_b]
       //console.log(groups)
@@ -86,33 +65,32 @@
       return `${groups[0]}_${groups[1]}`
     }
 
-
-    //interaction
-    var interaction_array_jibun;
-    function getInteractionJibun() {
+    //interaction　「最近の交流」に関わるコード
+    var my_interaction_array;
+    //「最近の交流」に関わるデータをFirestoreから取得する関数
+    function getMyInteraction() {
 
       //access to users/[jibun]/interaction and get and show into console
+      //ある１つの幹事ユーザーのもつ「最近の交流」は、グループIDをカンマ区切りで結合した文字列で表現されています
+      //ですので、利用するときはカンマで区切って配列にする必要があります
       firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
         console.log('raw interaction: ', doc.data()['interaction'])
         console.log('splitted interaction array: ', doc.data()['interaction'].split(','))
-        interaction_array_jibun = doc.data()['interaction'].split(',')
-        //addGroupTolist()をループで適用
-        for (var i = 0; i < interaction_array_jibun.length; i++) {
-          addGroupTolist(interaction_array_jibun[i])
+        my_interaction_array = doc.data()['interaction'].split(',')
+        //配列my_interaction_arrayに基づき、全ての「最近の交流」に含まれるべきグループを
+        //DOMに追加している。user uidに基づいてグループを管理していることに注意。groupIDではない
+        for (var i = 0; i < my_interaction_array.length; i++) {
+          drawEachGroupToList(my_interaction_array[i])
         }
 
       }).then(() => {
-        for (var i = 0; i < interaction_array_jibun.length; i++) {
-          initializeList(interaction_array_jibun[i])
+        for (var i = 0; i < my_interaction_array.length; i++) {
+          initializeFunctionsOfEachGroupList(my_interaction_array[i])
         }
       })
     }
 
-
-
-    function addGroupTolist(uid) {
-
-
+    function drawEachGroupToList(uid) {
       document.getElementById('group_list').innerHTML += '<div class="demo-list-action mdl-list">' +
         '<div class="mdl-list__item" id="' + uid + '">' +
         '<span class="mdl-list__item-primary-content">' +
@@ -122,21 +100,18 @@
         '<a class="mdl-list__item-secondary-action" id="' + uid + '_send">' + '<i class="material-icons">send</i>' + '</a>' +
         '</div>' +
         '</div>'
-
-      //initializeList(interaction_array_jibun[i])
-
     }
 
-
-
-
-    function initializeList(uid) {
+    //はじめに追加されたグループのリストのボタンには、イベントが何も追加されていない
+    //よってdrawEachGroupToListの実行後に、initializeFunctionsOfEachGroupListを実行し
+    //チャットボタンなどを押した時の動作を定義する
+    function initializeFunctionsOfEachGroupList(uid) {
       var urltochatroom = `chat.html?chatroom=${generateChatroomID(uid, firebase.auth().currentUser.uid)}`
 
-      //send
+      //チャットボタンへのクリックイベントの追加
       document.getElementById(`${uid}_send`).onclick = () => { window.location.href = urltochatroom }
 
-      //text
+      //グループの名前の描画
       firebase.firestore().collection('users').doc(uid).get().then((doc) => {
 
         var groupID = doc.data()['groupID'][0]
@@ -146,13 +121,7 @@
         })
 
       })
-      //document.getElementById(uid).innerHTML
-
     }
-
-
-
-
 
 
     var user = firebase.auth().currentUser
@@ -163,8 +132,8 @@
       if (user) {
         firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
           groupID = doc.data()['groupID'][0]
-          //document.getElementById('editGroup_0').onclick=()=>{window.location.href=`editGroupProfile.html?groupID=${groupID}`}
-
+          
+          //自分のグループに関わる基本情報をFirestoreから取得
           console.log(`groupID[0]=${groupID}`)
           firebase.firestore().collection('groups').doc(groupID).get().then((doc_group) => {
             //console.log(doc_group.data())
@@ -177,7 +146,7 @@
             addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID)
             //loading progressbar disabled
             document.getElementById('progressbar').style.visibility = 'hidden'
-            getInteractionJibun()
+            getMyInteraction()
 
           })
         })
@@ -189,7 +158,7 @@
 
 
     }
-
+    //自分のグループの概要の部分を描画する関数
     function addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID) {
       document.getElementById('group_0').innerHTML += `  <div class="mdl-card__title mdl-card--expand">` +
         `<h2 class="mdl-card__title-text">` + groupName + `</h2>` +
@@ -209,72 +178,39 @@
 
 
     var db = firebase.firestore()
+    //各種ユーザー情報とチャットルームID生成に関わる配列準備
     var users_documentID_array = [];
-    var currentUser
-
-
     var chatroom_documentID_array = []
     var chatroom_documentID_array_withUserUid = []
 
 
-
-    /*
-    
-    IS PATH CORRECT? 'chatrooms'
-    DOES F1 WORK?
-    FOR EACHでdoc.idのように使えるのか？
-    似たやつを利用　match.html
-    d
-    
-      db.collection("users").get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-              // doc.data() is never undefined for query doc snapshots
-              //console.log(doc.id);
-              users_documentID_array.push(doc.id)
-          })
-      })
-    
-    
-    
-    
-    */
-
     function getDocumentIDOfRecentChatroom() {
       //creates document id list
       var name = firebase.auth().currentUser.uid
+      //これは{userid1}_{userid2}の形のチャットルームIDをもつチャットルームの一覧をFirebaseから取得する処理です
+      //stackoverflowの記事を参考にしました。FirebaseではドキュメントIDを通常知らない場合に、一覧取得が難しいです
+      //次回作成する場合は、予測可能なチャットルームIDを構築するか、チャットルームIDをどこかのドキュメントに反映し、そのドキュメントから
+      //一覧取得するようにした方が良いと感じました
       db.collection("chatrooms").orderBy('name').startAt(name).endAt(name + '\uf8ff').get().then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          //f1
-          console.log('hey')
+          console.log('fetched a document ID (chatroom ID) from firestore')
           chatroom_documentID_array.push(doc.id)
           console.log(doc.id)
         })
-      }).catch((error) => { console.log(error) }).then(() => {
-        //search document id(s) that have user's uid
-        //using for loop or forEach
-        //for(var i=0;i<chatroom_documentID_array.length;i++){
-        //  addOnlyDocumentIDWithUsersUid(chatroom_documentID_array[i])
-        //}
-
-      })
+      }).catch((error) => { console.log(error) })
     }
 
-
-
-
     function addOnlyDocumentIDWithUsersUid(documentID) {
-      var uid_0 = documentID.slice(28 + 1)
-      var uid_1 = documentID.chatroom.slice(0, 28)
+      //{28文字のユーザーID}_{28文字のユーザーID}のチャットルームIDから、お互いのユーザーIDを抽出する処理
+      const DOCUMENTID_LENGTH=28
+      var uid_0 = documentID.slice(DOCUMENTID_LENGTH + 1)
+      var uid_1 = documentID.chatroom.slice(0, DOCUMENTID_LENGTH)
       if (uid_0 == firebase.auth().currentUser.uid) {
         chatroom_documentID_array_withUserUid.push(uid_1)
       } else if (uid_1 == firebase.auth().currentUser.uid) {
         chatroom_documentID_array_withUserUid.push(uid_0)
-      } else { }
+      }
     }
-
-
-
-
   </script>
 
   <script type="text/javascript" src="sidebar_nav.js"></script>
