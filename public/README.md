@@ -1,2 +1,2 @@
 # unigokon
-under construction
+This directory is used for firebase hosting
