@@ -191,7 +191,7 @@
       }
     }
 
-    var nickname_of_aite
+    var nicknameOfTheOtherUser
 
     function updateProfile() {
       firebase.firestore().collection('users').doc(getUidFromUrlParameter()).get().then((doc) => {
@@ -199,17 +199,14 @@
 
         document.querySelector("body > header > h1 > img").src = doc.data()['profilePicURL']
         document.getElementById('nav_text').innerHTML = `<br>　${doc.data()['nickname']}`
-        nickname_of_aite = doc.data()['nickname']
+        nicknameOfTheOtherUser = doc.data()['nickname']
 
-        //firebase.firestore().collection('groups').doc(doc.data().groupID[0]).then((doc)=>{console.log(doc.data())})
         console.log(doc.data().groupID[0])
         firebase.firestore().collection('groups').doc(doc.data().groupID[0]).get().then((doc_ref) => {
-          //console.log(doc_ref.data()['groupName'])
           document.getElementById('nav_text').innerHTML += `（${doc_ref.data()['groupName']}）とのチャット<br>　<span id='see_profiles'>グループプロフィールを見る</span>　<span id='exit_chat'>チャット終了</span>`
           document.getElementById('see_profiles').onclick = () => { window.location.href = `match.html?groupID=${doc_ref.data()['accountID']}` }
           document.getElementById('exit_chat').onclick = () => { window.location.href = "dashboard.html" }
-
-          //title change
+          //draws chat details at the top of the page
           document.title = `${doc_ref.data()['groupName']}とのチャット<br>　<span id='see_profiles'>グループプロフィールを見る</span>　<span id='exit_chat'>チャット終了</span>`
 
         })
@@ -224,55 +221,7 @@
         console.log('login status: in')
 
         //uid selection
-
-
-        /*
-        ************************************************
-        以下firebase.auth().currentUserオブジェクト関連の処理はこのレベルに配置せよ
-        Firebase公式ドキュメントによるとonAuthStateChangedオブザーバーによる処理が推奨されている
-        ************************************************
-        */
-        //firestore read and write tests here
-        //CREATING A GROUP
-        //TODO:adding multiple groups
-        /*
-              //get data with specified groupID and save them into js dictionary
-            function getGroupData{}
-              //modify a group with specified group id
-            }
-            function modifyGroup(groupID,groupData){  
-  
-            }
-        */
-
-        //showGroupsはユーザが作成したグループの一覧の配列を返す
-        //showGroups().groupName のように値を取り出したい
-        //ここはユーザのobjectのみ
-        //readUserOb//*******************ject(user.uid).groupID[1]
-        //users , groups object作ればいいのか
-        //firestore/users/[uid]の配列を読み取りのみで変数にほぞん
-        //USER OBJECT SETUP (read only)
-        //currentUserObjectはグローバル変数にしている
-        //*********この実行タイミングがうまくできていない
-        //*********このsetupの配置を考え直す
-        /*
-        //GROUP OBJECT SETUP (read only)
-        var currentGroupObject;
-        savaGroupObjectIntoVariable()
-        function savaGroupObjectIntoVariable(groupID) {
-          var groupsObject_firestore_users;
-          db.collection("groups").doc(currentUserObject.groupID).get().then(function (doc) {
-            console.log('groupsObject saved into a variable',doc.data())
-            currentGroupObject = doc.data()
-          })
-        }
-        */
-
-
-
-        //*******とりあえずデータベース更新問題はほっといて、UIだけ作る
-
-
+        
         //saveMessage setup
         function saveMessage(messageText) {
           console.log('saveMessage executed line 210')
@@ -282,7 +231,7 @@
             text: messageText,
             profilePicUrl: 'test profilePicUrl',
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            nickname: nickname_of_aite
+            nickname: nicknameOfTheOtherUser
           }).catch(function (error) {
             console.error('Error writing new message to database', error)
           })
