@@ -103,8 +103,8 @@
         .top_function_bar {
           width: 30%;
           height: 200px;
-          top:100px;
-          left:50px;
+          top: 100px;
+          left: 50px;
           border-radius: 10px;
         }
 
@@ -115,7 +115,7 @@
           width: 360px;
           height: 8%;
           top: 200px;
-          left:50px;
+          left: 50px;
         }
       }
     </style>
@@ -127,7 +127,8 @@
 
   <br>
   <p id='message_box' align='left'></p>
-  </div> <a name='bottom'></a> <span id='bottom_message_bar'><input class='input_textbox' id='input_textbox_id' placeholder="メッセージを入力">
+  </div> <a name='bottom'></a> <span id='bottom_message_bar'><input class='input_textbox' id='input_textbox_id'
+      placeholder="メッセージを入力">
 
 
     <!-- <button class='send_button' id='send'>送信</button> -->
@@ -141,7 +142,7 @@
 
   <script>
 
-    //TODO urlパラメータでチャットルームid
+    //URL parameters settings
     var urlParameter = new Object;
     var pair = location.search.substring(1).split('&');
     for (var i = 0; pair[i]; i++) {
@@ -149,49 +150,40 @@
       urlParameter[kv[0]] = kv[1];
     }
 
-    //まだURLパラメータは不十分
+    //chatroomID must be specified in the URL parameters
     var chatroomIDFromUrlParameter = urlParameter.chatroom
     if (!chatroomIDFromUrlParameter) { alert('chatroomIDが指定されていません') }
 
-
-
     var currentUserObject;
-    /*
-     **********UNIGOKON SETTING FROM HERE*********
-     */
-
-
-    //note firebase app initializatinoはinit.jsを読み込めば実行する必要はない
     var db = firebase.firestore();
-    /*デバッグ時に変更が適用されたかどうかを以下でチェック*/
-    //後々実名変更回数制限を設ける
-    //今は実装しない
-    //グループプロファイルのplaceholderつくる
-    //初回ログイン時にphotoURLをplaceholderのURLにする
     var user = firebase.auth().currentUser;
-    /*
-     **********UNIGOKON SETTING END HERE**********
-     */
-    var currentGroupSelected = 0
+
+    //初めは1つの幹事ユーザーに対して複数のグループを割り当てる予定でした
+    //しかし、その実装をせずに1つの幹事ユーザーに対して１つのグループを割り当てるようにしました
+    //次行で宣言している変数はその名残りですが、常に0に設定されています
+    const GROUP_INDEX = 0
     function saveUserObjectIntoVariable(users_path) {
       db.collection("users").doc(users_path).get().then(function (doc) {
         console.log('usersObject saved into a variable', doc.data())
+        //ユーザーの基本情報を変数として一時保存します。これはデータベースへのリクエスト回数を減らすためです
         currentUserObject = doc.data()
       }).then(function () {
-        //todo create a group object
-        //you need to specify which group you wanna save object into a variable
         colsole.log(currentUserObject)
-        db.collection("groups").doc(currentUserObject.groupID[currentGroupSelected]).get().then(function (doc) {
+        db.collection("groups").doc(currentUserObject.groupID[GROUP_INDEX]).get().then(function (doc) {
           console.log('groupObject saved into a variable', doc.data())
+          //グループの基本情報を変数として一時保存します。これはデータベースへのリクエスト回数を減らすためです
           currentGroupObject = doc.data()
         })
       })
     }
     firebase.auth().onAuthStateChanged(authStateObserver)
 
+    //chatroomIDは{28文字の幹事ユーザーID}_{28文字の幹事ユーザーID}の形です
+    //ここから２つのユーザーのIDを抽出します
+    let USERID_LENGTH=28
     function getUidFromUrlParameter() {
-      uid_0 = urlParameter.chatroom.slice(28 + 1)
-      var uid_1 = urlParameter.chatroom.slice(0, 28)
+      uid_0 = urlParameter.chatroom.slice(USERID_LENGTH + 1)
+      var uid_1 = urlParameter.chatroom.slice(0, USERID_LENGTH)
       if (uid_0 == firebase.auth().currentUser.uid) {
         return uid_1
       } else {
