@@ -220,68 +220,54 @@
       if (user) {
         console.log('login status: in')
 
-        //uid selection
-        
-        //saveMessage setup
-        function saveMessage(messageText) {
-          console.log('saveMessage executed line 210')
+        //saves a message to Firestore with some contexts
+        function sendMessageToFirestore(messageText) {
+          console.log('sendMessageToFirestore executed')
           return firebase.firestore().collection('chatrooms').doc(chatroomIDFromUrlParameter).collection('messages').add({
-            //name: currentUserObject.name + '(「' + currentGroupObject.groupName + '」の幹事)',
             uid: user.uid,
             text: messageText,
-            profilePicUrl: 'test profilePicUrl',
+            profilePicUrl: '/loading.jpg',
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             nickname: nicknameOfTheOtherUser
           }).catch(function (error) {
-            console.error('Error writing new message to database', error)
+            console.error('Error writing new message to database when executing sendMessageToFirestore', error)
           })
         }
-        //getting info from input tag
-        //Saving a new message test exceting
+
+        //adds an onclick event to send button, and cleans the input text
         document.getElementById('send').onclick = function () {
-          saveMessage(document.getElementById('input_textbox_id').value)
+          sendMessageToFirestore(document.getElementById('input_textbox_id').value)
           document.getElementById('input_textbox_id').value = ''
         }
-        //*******
 
         var messagesRef = db.collection("chatrooms").doc(chatroomIDFromUrlParameter).collection("messages");
 
         /**
-         * 同期処理
+         * 同期処理 更新の種類にしたがって描画の処理を分ける
          **/
+        //Firestoreのデータを時間の昇順で取得するようリッスン開始する
         messagesRef.orderBy("timestamp", "asc").onSnapshot((snapshot) => {
           snapshot.docChanges().forEach((change) => {
             // 追加
             if (change.type === 'added') {
               if (change.doc.data()['timestamp'] != null) {
                 console.log(`doc id:${change.doc.id}`, `text:${change.doc.data()['text']}`);
-
-
               }
-              //displayMessage
+              //displays new messages
               var div = document.createElement('div')
               div.setAttribute('id', change.doc.id);
               document.getElementById('message_box').appendChild(div)
-
-
+              //DOM templates
               document.getElementById(change.doc.id).innerHTML +=
-
-
-                /*(()=>{
-                  if(change.doc.data().uid!=firebase.auth().currentUser.uid){
-                    return change.doc.data()['name']
-                  }else{return ''}
-                })()+*/
-
-                `<span class="mdl-chip" `
-                + `><span class="mdl-chip__text">` +
-                `${change.doc.data()['text']}` + `</span></span>`
-
+                `<span class="mdl-chip"><span class="mdl-chip__text">` +
+                `${change.doc.data()['text']}</span></span>`
+              
+              //メッセージが自分が送信したものかどうかを確認する
+              //もし自分が送信したものであれば、右寄せする
+              //そうでないものはデフォルトで左寄せされる
               if (change.doc.data().uid == firebase.auth().currentUser.uid) {
                 document.getElementById(change.doc.id).style.textAlign = 'right'
               }
-
-
             }
             // 更新
             else if (change.type === 'modified') {
