@@ -17,11 +17,6 @@
 
 <body>
 
-
-
-
-
-
   <header class="top_function_bar">
     <style type='text/css'>
       body {
@@ -130,8 +125,6 @@
   </div> <a name='bottom'></a> <span id='bottom_message_bar'><input class='input_textbox' id='input_textbox_id'
       placeholder="メッセージを入力">
 
-
-    <!-- <button class='send_button' id='send'>送信</button> -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" id='send'>
       <i class="material-icons">send</i>
     </button>
@@ -180,7 +173,7 @@
 
     //chatroomIDは{28文字の幹事ユーザーID}_{28文字の幹事ユーザーID}の形です
     //ここから２つのユーザーのIDを抽出します
-    let USERID_LENGTH=28
+    let USERID_LENGTH = 28
     function getUidFromUrlParameter() {
       uid_0 = urlParameter.chatroom.slice(USERID_LENGTH + 1)
       var uid_1 = urlParameter.chatroom.slice(0, USERID_LENGTH)
@@ -193,7 +186,7 @@
 
     var nicknameOfTheOtherUser
 
-    function updateProfile() {
+    function drawProfile() {
       firebase.firestore().collection('users').doc(getUidFromUrlParameter()).get().then((doc) => {
         console.log(doc.data())
 
@@ -261,7 +254,7 @@
               document.getElementById(change.doc.id).innerHTML +=
                 `<span class="mdl-chip"><span class="mdl-chip__text">` +
                 `${change.doc.data()['text']}</span></span>`
-              
+
               //メッセージが自分が送信したものかどうかを確認する
               //もし自分が送信したものであれば、右寄せする
               //そうでないものはデフォルトで左寄せされる
@@ -269,28 +262,17 @@
                 document.getElementById(change.doc.id).style.textAlign = 'right'
               }
             }
-            // 更新
-            else if (change.type === 'modified') {
-              console.log(change.doc.id, change.doc.data());
-            }
-            // 削除
-            else if (change.type === 'removed') {
-              console.log(change.doc.id);
-            }
+            //ドキュメントの内容の更新や削除のイベントについてはリッスンしていない
+            //追加イベントのみ上記でリッスンしている
           });
         })
-        updateProfile()
-
-
-
+        drawProfile()
       } else {
         console.log('login status: out')
         alert('ログインしていません')
         window.location.href = 'index.html'
       }
     }
-
-
   </script>　
 
 </html>
