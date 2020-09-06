@@ -114,11 +114,18 @@
       //グループの名前の描画
       firebase.firestore().collection('users').doc(uid).get().then((doc) => {
 
-        var groupID = doc.data()['groupID'][0]
-        //getting groupinfo based on the above groupID
-        firebase.firestore().collection('groups').doc(groupID).get().then((groupRef) => {
-          document.getElementById(`${uid}_summary`).innerHTML = groupRef.data()['groupName']
-        })
+        //sometimes promise error
+        //uid here is not limited to those of the current user
+        console.log('doc.data()',doc.data())
+        var groupID
+        if (doc.data()&&doc.data()['groupID']&&doc.data()['groupID'][0]) {
+          //getting groupinfo based on the above groupID
+          firebase.firestore().collection('groups').doc(groupID).get().then((groupRef) => {
+            document.getElementById(`${uid}_summary`).innerHTML = groupRef.data()['groupName']
+          })
+        }else{
+          console.log('no groupID found on the database')
+        }
 
       })
     }
@@ -131,8 +138,12 @@
     function authStateObserver(user) {
       if (user) {
         firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
-          groupID = doc.data()['groupID'][0]
-          
+          if(doc.data()['groupID']){
+            groupID = doc.data()['groupID'][0]
+          }else{
+            console.log('failed to fetche a groupID')
+          }
+
           //自分のグループに関わる基本情報をFirestoreから取得
           console.log(`groupID[0]=${groupID}`)
           firebase.firestore().collection('groups').doc(groupID).get().then((doc_group) => {
@@ -141,9 +152,7 @@
             //console.log(groupName)
             var groupDescription = doc_group.data()['groupDescription']
             //console.log(groupDescription)
-            var avatarImage = doc_group.data()['avatarImage']
-            //console.log(avatarImage)
-            addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID)
+            addGroupOverviewToCard(groupName, groupDescription, groupID)
             //loading progressbar disabled
             document.getElementById('progressbar').style.visibility = 'hidden'
             getMyInteraction()
@@ -159,7 +168,7 @@
 
     }
     //自分のグループの概要の部分を描画する関数
-    function addGroupOverviewToCard(groupName, groupDescription, avatarImage, groupID) {
+    function addGroupOverviewToCard(groupName, groupDescription, groupID) {
       document.getElementById('group_0').innerHTML += `  <div class="mdl-card__title mdl-card--expand">` +
         `<h2 class="mdl-card__title-text">` + groupName + `</h2>` +
         `</div>` +
@@ -173,7 +182,6 @@
         `グループマッチ` +
         `</a>` +
         `</div>`
-      document.querySelector("#group_0 > div.mdl-card__title").style.backgroundImage = `url("${avatarImage}") bottom right 0%`;
     }
 
 
@@ -201,7 +209,7 @@
 
     function addOnlyDocumentIDWithUsersUid(documentID) {
       //{28文字のユーザーID}_{28文字のユーザーID}のチャットルームIDから、お互いのユーザーIDを抽出する処理
-      const DOCUMENTID_LENGTH=28
+      const DOCUMENTID_LENGTH = 28
       var uid_0 = documentID.slice(DOCUMENTID_LENGTH + 1)
       var uid_1 = documentID.chatroom.slice(0, DOCUMENTID_LENGTH)
       if (uid_0 == firebase.auth().currentUser.uid) {
