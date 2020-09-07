@@ -5,49 +5,29 @@ body {
 #startbutton, #startbutton2, #login1, #login2, #contactus {
   background-color: #57a99a;
   font-size: 200%;
-  /*フォントサイズの調整*/
   color: white;
-  /*文字色の変更*/
   padding-top: 5px;
-  /*文字上部に余白*/
   padding-bottom: 5px;
-  /*文字下部に余白*/
   padding-left: 20px;
-  /*文字左側に余白*/
   padding-right: 20px;
-  /*文字右側に余白*/
   border: 1px solid #76db01;
-  /*文字の周りに線を描く*/
   border-radius: 5px;
-  /*線の角に丸みを付ける*/
   letter-spacing: 3px;
-  /*文字と文字の間隔をあける*/
   font-weight: 400;
-  /*文字の太さの変更*/
 }
 
 #conventionaldrawbacks, #adv1, #adv2, #adv3, #adv4, #importantnotes {
   background-color: #d1eecc;
   font-size: 120%;
-  /*フォントサイズの調整*/
   color: #313131;
-  /*文字色の変更*/
   padding-top: 10px;
-  /*文字上部に余白*/
   padding-bottom: 10px;
-  /*文字下部に余白*/
   padding-left: 20px;
-  /*文字左側に余白*/
   padding-right: 20px;
-  /*文字右側に余白*/
   border: 1px solid #d1eecc;
-  /*文字の周りに線を描く*/
   border-radius: 5px;
-  /*線の角に丸みを付ける*/
   letter-spacing: 3px;
-  /*文字と文字の間隔をあける*/
   font-weight: 400;
-  /*文字の太さの変更*/
 }
 
 #logo {
